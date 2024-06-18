@@ -1,0 +1,13 @@
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.AssemblyReference.cache
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.AddCustomerForm.resources
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.CustomerManagementForm.resources
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.LoginForm.resources
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.MainForm.resources
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.OpenNewPassbookForm.resources
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.PassbookManagementForm.resources
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Properties.Resources.resources
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.RegulationForm.resources
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.TransactionForm.resources
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.TransactionHistoryForm.resources
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.GenerateResource.cache
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CoreCompileInputs.cache
