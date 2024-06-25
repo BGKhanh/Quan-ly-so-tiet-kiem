@@ -6,7 +6,7 @@ namespace BankManagement
 {
     public partial class TransactionForm : Form
     {
-        private string connectionString = "your_connection_string_here"; // Update with your actual connection string
+        private string connectionString = "DATA.db"; // Update with your actual connection string
 
         public TransactionForm()
         {

@@ -6,15 +6,18 @@ namespace BankManagement
 {
     public partial class RegulationForm : Form
     {
-        public RegulationForm()
+        private string username; // Thêm thuộc tính username
+
+        public RegulationForm(string username) // Thay đổi constructor để nhận username
         {
             InitializeComponent();
+            this.username = username; // Lưu trữ username khi khởi tạo form
         }
 
         private void btnBackToMain_Click(object sender, EventArgs e)
         {
             this.Close();
-            MainForm mainForm = new MainForm();
+            MainForm mainForm = new MainForm(username); // Truyền username vào MainForm
             mainForm.Show();
         }
 
@@ -36,14 +39,14 @@ namespace BankManagement
             MessageBox.Show($"Quy định mới đã được lưu: \nKỳ hạn: {term}\nLãi suất: {interestRate}%\nTiền gửi tối thiểu: {minDeposit}\nThời gian gửi tối thiểu: {minDuration} tháng");
 
             this.Close();
-            MainForm mainForm = new MainForm();
+            MainForm mainForm = new MainForm(username); // Truyền username vào MainForm
             mainForm.Show();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
-            MainForm mainForm = new MainForm();
+            MainForm mainForm = new MainForm(username); // Truyền username vào MainForm
             mainForm.Show();
         }
 

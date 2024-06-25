@@ -7,7 +7,10 @@ namespace BankManagement
         private System.ComponentModel.IContainer components = null;
         private Button btnBackToMain;
         private Button btnOpenNewAccount;
+        private Button btnDeleteAccount;
+        private Button btnSearch;
         private DataGridView dgvSavingAccounts;
+        private TextBox txtSearch;
 
         protected override void Dispose(bool disposing)
         {
@@ -22,6 +25,9 @@ namespace BankManagement
         {
             this.btnBackToMain = new System.Windows.Forms.Button();
             this.btnOpenNewAccount = new System.Windows.Forms.Button();
+            this.btnDeleteAccount = new System.Windows.Forms.Button();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.txtSearch = new System.Windows.Forms.TextBox();
             this.dgvSavingAccounts = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSavingAccounts)).BeginInit();
             this.SuspendLayout();
@@ -48,6 +54,36 @@ namespace BankManagement
             this.btnOpenNewAccount.UseVisualStyleBackColor = true;
             this.btnOpenNewAccount.Click += new System.EventHandler(this.btnOpenNewAccount_Click);
             // 
+            // btnDeleteAccount
+            // 
+            this.btnDeleteAccount.Location = new System.Drawing.Point(265, 15);
+            this.btnDeleteAccount.Margin = new System.Windows.Forms.Padding(4);
+            this.btnDeleteAccount.Name = "btnDeleteAccount";
+            this.btnDeleteAccount.Size = new System.Drawing.Size(133, 28);
+            this.btnDeleteAccount.TabIndex = 2;
+            this.btnDeleteAccount.Text = "Xóa";
+            this.btnDeleteAccount.UseVisualStyleBackColor = true;
+            this.btnDeleteAccount.Click += new System.EventHandler(this.btnDeleteAccount_Click);
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Location = new System.Drawing.Point(599, 15);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(100, 28);
+            this.btnSearch.TabIndex = 3;
+            this.btnSearch.Text = "Tìm kiếm";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Location = new System.Drawing.Point(406, 17);
+            this.txtSearch.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(185, 22);
+            this.txtSearch.TabIndex = 4;
+            // 
             // dgvSavingAccounts
             // 
             this.dgvSavingAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -56,8 +92,7 @@ namespace BankManagement
             this.dgvSavingAccounts.Name = "dgvSavingAccounts";
             this.dgvSavingAccounts.RowHeadersWidth = 51;
             this.dgvSavingAccounts.Size = new System.Drawing.Size(800, 369);
-            this.dgvSavingAccounts.TabIndex = 2;
-            this.dgvSavingAccounts.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSavingAccounts_CellContentClick);
+            this.dgvSavingAccounts.TabIndex = 5;
             // 
             // PassbookManagementForm
             // 
@@ -65,6 +100,9 @@ namespace BankManagement
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(832, 444);
             this.Controls.Add(this.dgvSavingAccounts);
+            this.Controls.Add(this.txtSearch);
+            this.Controls.Add(this.btnSearch);
+            this.Controls.Add(this.btnDeleteAccount);
             this.Controls.Add(this.btnOpenNewAccount);
             this.Controls.Add(this.btnBackToMain);
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -73,6 +111,7 @@ namespace BankManagement
             this.Load += new System.EventHandler(this.PassbookManagementForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSavingAccounts)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
         }
     }
 }

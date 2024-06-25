@@ -1,20 +1,26 @@
 ﻿using System;
+using System.Data;
+using System.Data.SQLite;
 using System.Windows.Forms;
 
 namespace BankManagement
 {
     public partial class PassbookManagementForm : Form
     {
-        public PassbookManagementForm()
+        private string username;
+        private string connectionString = "Data Source=DATA.db;Version=3;";
+
+        public PassbookManagementForm(string username)
         {
             InitializeComponent();
+            this.username = username;
             LoadSavingAccounts();
         }
 
         private void btnBackToMain_Click(object sender, EventArgs e)
         {
             this.Close();
-            MainForm mainForm = new MainForm();
+            MainForm mainForm = new MainForm(username);
             mainForm.Show();
         }
 
@@ -24,33 +30,91 @@ namespace BankManagement
             openNewPassbookForm.Show();
         }
 
-        private void dgvSavingAccounts_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void btnDeleteAccount_Click(object sender, EventArgs e)
         {
-            if (e.RowIndex >= 0)
+            if (dgvSavingAccounts.SelectedRows.Count > 0)
             {
-                DataGridViewRow row = dgvSavingAccounts.Rows[e.RowIndex];
-                // Handle cell content click if necessary
+                DataGridViewRow selectedRow = dgvSavingAccounts.SelectedRows[0];
+                string accountId = selectedRow.Cells["Mã Sổ"].Value.ToString();
+                decimal accountBalance = Convert.ToDecimal(selectedRow.Cells["Số Tiền Gửi"].Value);
+
+                if (accountBalance != 0)
+                {
+                    MessageBox.Show("Chỉ có thể xóa sổ tiết kiệm khi số tiền trong sổ là 0.");
+                    return;
+                }
+
+                var confirmResult = MessageBox.Show("Bạn có chắc chắn muốn xóa sổ tiết kiệm này?", "Xác nhận xóa", MessageBoxButtons.YesNo);
+                if (confirmResult == DialogResult.Yes)
+                {
+                    using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                    {
+                        connection.Open();
+                        string deleteQuery = "DELETE FROM SoTietKiem WHERE MaSo = @MaSo";
+                        using (SQLiteCommand command = new SQLiteCommand(deleteQuery, connection))
+                        {
+                            command.Parameters.AddWithValue("@MaSo", accountId);
+                            command.ExecuteNonQuery();
+                        }
+                    }
+
+                    LoadSavingAccounts();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một sổ tiết kiệm để xóa.");
             }
         }
 
-        private void LoadSavingAccounts()
+        private void btnSearch_Click(object sender, EventArgs e)
         {
-            var dataTable = new System.Data.DataTable();
-            dataTable.Columns.Add("Mã Sổ", typeof(string));
-            dataTable.Columns.Add("Tên Khách Hàng", typeof(string));
-            dataTable.Columns.Add("Số Dư", typeof(decimal));
-            dataTable.Columns.Add("Kỳ Hạn", typeof(string));
-            dataTable.Columns.Add("Lãi Suất", typeof(decimal));
+            LoadSavingAccounts(txtSearch.Text);
+        }
 
-            dataTable.Rows.Add("SA001", "Nguyễn Văn A", 1000000, "12 tháng", 6.5);
-            dataTable.Rows.Add("SA002", "Trần Thị B", 500000, "6 tháng", 5.0);
+        private void LoadSavingAccounts(string searchKeyword = "")
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                string query = @"
+                    SELECT 
+                        stk.MaSo AS 'Mã Sổ', 
+                        lk.TenKyHan AS 'Loại Tiết Kiệm', 
+                        kh.TenKH AS 'Tên Khách Hàng', 
+                        kh.[CMND/CCCD] AS 'CMND/CCCD',
+                        kh.DiaChi AS 'Địa Chỉ',
+                        stk.NgayLapSo AS 'Ngày Mở Sổ', 
+                        stk.SoDu AS 'Số Tiền Gửi',
+                        CASE
+                            WHEN stk.SoDu = 0 THEN 'Đóng'
+                            ELSE 'Đang Mở'
+                        END AS 'Tình Trạng'
+                    FROM 
+                        SoTietKiem stk
+                    JOIN 
+                        KhachHang kh ON stk.MaKH = kh.MaKH
+                    JOIN 
+                        LoaiKyHan lk ON stk.MaKyHan = lk.MaKyHan
+                    WHERE 
+                        stk.MaSo LIKE @SearchKeyword OR
+                        kh.TenKH LIKE @SearchKeyword OR
+                        kh.[CMND/CCCD] LIKE @SearchKeyword OR
+                        kh.DiaChi LIKE @SearchKeyword";
 
-            dgvSavingAccounts.DataSource = dataTable;
+                SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(query, connection);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@SearchKeyword", "%" + searchKeyword + "%");
+
+                DataTable dataTable = new DataTable();
+                dataAdapter.Fill(dataTable);
+
+                dgvSavingAccounts.DataSource = dataTable;
+            }
         }
 
         private void PassbookManagementForm_Load(object sender, EventArgs e)
         {
             // Add any additional initialization code here
+
         }
     }
 }

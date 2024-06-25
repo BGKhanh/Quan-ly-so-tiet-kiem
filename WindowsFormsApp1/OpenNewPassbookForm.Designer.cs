@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace BankManagement
 {
@@ -8,14 +7,21 @@ namespace BankManagement
         private System.ComponentModel.IContainer components = null;
         private Button btnSave;
         private Button btnCancel;
+        private Label lblPassbookTitle;
+        private Label lblPassbookID;
+        private Label lblPassbookType;
         private Label lblCustomerName;
+        private Label lblIDCard;
+        private Label lblAddress;
+        private Label lblOpenDate;
         private Label lblInitialDeposit;
-        private Label lblTerm;
-        private Label lblInterestRate;
+        private Label lblPassbookIDValue;
+        private TextBox txtPassbookType;
         private TextBox txtCustomerName;
+        private TextBox txtIDCard;
+        private TextBox txtAddress;
+        private DateTimePicker dtpOpenDate;
         private TextBox txtInitialDeposit;
-        private TextBox txtTerm;
-        private TextBox txtInterestRate;
 
         protected override void Dispose(bool disposing)
         {
@@ -30,19 +36,26 @@ namespace BankManagement
         {
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.lblPassbookTitle = new System.Windows.Forms.Label();
+            this.lblPassbookID = new System.Windows.Forms.Label();
+            this.lblPassbookType = new System.Windows.Forms.Label();
             this.lblCustomerName = new System.Windows.Forms.Label();
+            this.lblIDCard = new System.Windows.Forms.Label();
+            this.lblAddress = new System.Windows.Forms.Label();
+            this.lblOpenDate = new System.Windows.Forms.Label();
             this.lblInitialDeposit = new System.Windows.Forms.Label();
-            this.lblTerm = new System.Windows.Forms.Label();
-            this.lblInterestRate = new System.Windows.Forms.Label();
+            this.lblPassbookIDValue = new System.Windows.Forms.Label();
+            this.txtPassbookType = new System.Windows.Forms.TextBox();
             this.txtCustomerName = new System.Windows.Forms.TextBox();
+            this.txtIDCard = new System.Windows.Forms.TextBox();
+            this.txtAddress = new System.Windows.Forms.TextBox();
+            this.dtpOpenDate = new System.Windows.Forms.DateTimePicker();
             this.txtInitialDeposit = new System.Windows.Forms.TextBox();
-            this.txtTerm = new System.Windows.Forms.TextBox();
-            this.txtInterestRate = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(116, 145);
+            this.btnSave.Location = new System.Drawing.Point(155, 278);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 0;
@@ -52,7 +65,7 @@ namespace BankManagement
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(197, 145);
+            this.btnCancel.Location = new System.Drawing.Point(255, 278);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 1;
@@ -60,87 +73,155 @@ namespace BankManagement
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // lblPassbookTitle
+            // 
+            this.lblPassbookTitle.AutoSize = true;
+            this.lblPassbookTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPassbookTitle.Location = new System.Drawing.Point(12, 9);
+            this.lblPassbookTitle.Name = "lblPassbookTitle";
+            this.lblPassbookTitle.Size = new System.Drawing.Size(118, 20);
+            this.lblPassbookTitle.TabIndex = 2;
+            this.lblPassbookTitle.Text = "Sổ Tiết Kiệm";
+            // 
+            // lblPassbookID
+            // 
+            this.lblPassbookID.AutoSize = true;
+            this.lblPassbookID.Location = new System.Drawing.Point(16, 48);
+            this.lblPassbookID.Name = "lblPassbookID";
+            this.lblPassbookID.Size = new System.Drawing.Size(50, 13);
+            this.lblPassbookID.TabIndex = 3;
+            this.lblPassbookID.Text = "Mã số:";
+            // 
+            // lblPassbookIDValue
+            // 
+            this.lblPassbookIDValue.AutoSize = true;
+            this.lblPassbookIDValue.Location = new System.Drawing.Point(120, 48);
+            this.lblPassbookIDValue.Name = "lblPassbookIDValue";
+            this.lblPassbookIDValue.Size = new System.Drawing.Size(50, 13);
+            this.lblPassbookIDValue.TabIndex = 10;
+            this.lblPassbookIDValue.Text = "TBD";
+            // 
+            // lblPassbookType
+            // 
+            this.lblPassbookType.AutoSize = true;
+            this.lblPassbookType.Location = new System.Drawing.Point(16, 78);
+            this.lblPassbookType.Name = "lblPassbookType";
+            this.lblPassbookType.Size = new System.Drawing.Size(86, 13);
+            this.lblPassbookType.TabIndex = 4;
+            this.lblPassbookType.Text = "Loại tiết kiệm:";
+            // 
             // lblCustomerName
             // 
             this.lblCustomerName.AutoSize = true;
-            this.lblCustomerName.Location = new System.Drawing.Point(12, 25);
+            this.lblCustomerName.Location = new System.Drawing.Point(16, 108);
             this.lblCustomerName.Name = "lblCustomerName";
-            this.lblCustomerName.Size = new System.Drawing.Size(87, 13);
-            this.lblCustomerName.TabIndex = 2;
-            this.lblCustomerName.Text = "Tên khách hàng:";
+            this.lblCustomerName.Size = new System.Drawing.Size(72, 13);
+            this.lblCustomerName.TabIndex = 5;
+            this.lblCustomerName.Text = "Khách hàng:";
+            // 
+            // lblIDCard
+            // 
+            this.lblIDCard.AutoSize = true;
+            this.lblIDCard.Location = new System.Drawing.Point(16, 138);
+            this.lblIDCard.Name = "lblIDCard";
+            this.lblIDCard.Size = new System.Drawing.Size(48, 13);
+            this.lblIDCard.TabIndex = 6;
+            this.lblIDCard.Text = "CMND:";
+            // 
+            // lblAddress
+            // 
+            this.lblAddress.AutoSize = true;
+            this.lblAddress.Location = new System.Drawing.Point(16, 168);
+            this.lblAddress.Name = "lblAddress";
+            this.lblAddress.Size = new System.Drawing.Size(49, 13);
+            this.lblAddress.TabIndex = 7;
+            this.lblAddress.Text = "Địa chỉ:";
+            // 
+            // lblOpenDate
+            // 
+            this.lblOpenDate.AutoSize = true;
+            this.lblOpenDate.Location = new System.Drawing.Point(16, 198);
+            this.lblOpenDate.Name = "lblOpenDate";
+            this.lblOpenDate.Size = new System.Drawing.Size(79, 13);
+            this.lblOpenDate.TabIndex = 8;
+            this.lblOpenDate.Text = "Ngày mở sổ:";
             // 
             // lblInitialDeposit
             // 
             this.lblInitialDeposit.AutoSize = true;
-            this.lblInitialDeposit.Location = new System.Drawing.Point(12, 55);
+            this.lblInitialDeposit.Location = new System.Drawing.Point(16, 228);
             this.lblInitialDeposit.Name = "lblInitialDeposit";
-            this.lblInitialDeposit.Size = new System.Drawing.Size(71, 13);
-            this.lblInitialDeposit.TabIndex = 3;
-            this.lblInitialDeposit.Text = "Số tiền gửi:";
+            this.lblInitialDeposit.Size = new System.Drawing.Size(72, 13);
+            this.lblInitialDeposit.TabIndex = 9;
+            this.lblInitialDeposit.Text = "Số tiền gởi:";
             // 
-            // lblTerm
+            // txtPassbookType
             // 
-            this.lblTerm.AutoSize = true;
-            this.lblTerm.Location = new System.Drawing.Point(12, 85);
-            this.lblTerm.Name = "lblTerm";
-            this.lblTerm.Size = new System.Drawing.Size(47, 13);
-            this.lblTerm.TabIndex = 4;
-            this.lblTerm.Text = "Kỳ hạn:";
-            // 
-            // lblInterestRate
-            // 
-            this.lblInterestRate.AutoSize = true;
-            this.lblInterestRate.Location = new System.Drawing.Point(12, 115);
-            this.lblInterestRate.Name = "lblInterestRate";
-            this.lblInterestRate.Size = new System.Drawing.Size(59, 13);
-            this.lblInterestRate.TabIndex = 5;
-            this.lblInterestRate.Text = "Lãi suất:";
+            this.txtPassbookType.Location = new System.Drawing.Point(120, 75);
+            this.txtPassbookType.Name = "txtPassbookType";
+            this.txtPassbookType.Size = new System.Drawing.Size(200, 20);
+            this.txtPassbookType.TabIndex = 11;
             // 
             // txtCustomerName
             // 
-            this.txtCustomerName.Location = new System.Drawing.Point(116, 22);
+            this.txtCustomerName.Location = new System.Drawing.Point(120, 105);
             this.txtCustomerName.Name = "txtCustomerName";
             this.txtCustomerName.Size = new System.Drawing.Size(200, 20);
-            this.txtCustomerName.TabIndex = 6;
+            this.txtCustomerName.TabIndex = 12;
+            // 
+            // txtIDCard
+            // 
+            this.txtIDCard.Location = new System.Drawing.Point(120, 135);
+            this.txtIDCard.Name = "txtIDCard";
+            this.txtIDCard.Size = new System.Drawing.Size(200, 20);
+            this.txtIDCard.TabIndex = 13;
+            // 
+            // txtAddress
+            // 
+            this.txtAddress.Location = new System.Drawing.Point(120, 165);
+            this.txtAddress.Name = "txtAddress";
+            this.txtAddress.Size = new System.Drawing.Size(200, 20);
+            this.txtAddress.TabIndex = 14;
+            // 
+            // dtpOpenDate
+            // 
+            this.dtpOpenDate.Location = new System.Drawing.Point(120, 195);
+            this.dtpOpenDate.Name = "dtpOpenDate";
+            this.dtpOpenDate.Size = new System.Drawing.Size(200, 20);
+            this.dtpOpenDate.TabIndex = 15;
             // 
             // txtInitialDeposit
             // 
-            this.txtInitialDeposit.Location = new System.Drawing.Point(116, 52);
+            this.txtInitialDeposit.Location = new System.Drawing.Point(120, 225);
             this.txtInitialDeposit.Name = "txtInitialDeposit";
             this.txtInitialDeposit.Size = new System.Drawing.Size(200, 20);
-            this.txtInitialDeposit.TabIndex = 7;
-            // 
-            // txtTerm
-            // 
-            this.txtTerm.Location = new System.Drawing.Point(116, 82);
-            this.txtTerm.Name = "txtTerm";
-            this.txtTerm.Size = new System.Drawing.Size(200, 20);
-            this.txtTerm.TabIndex = 8;
-            // 
-            // txtInterestRate
-            // 
-            this.txtInterestRate.Location = new System.Drawing.Point(116, 112);
-            this.txtInterestRate.Name = "txtInterestRate";
-            this.txtInterestRate.Size = new System.Drawing.Size(200, 20);
-            this.txtInterestRate.TabIndex = 9;
+            this.txtInitialDeposit.TabIndex = 16;
             // 
             // OpenNewPassbookForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(328, 180);
-            this.Controls.Add(this.txtInterestRate);
-            this.Controls.Add(this.txtTerm);
+            this.ClientSize = new System.Drawing.Size(384, 311);
             this.Controls.Add(this.txtInitialDeposit);
+            this.Controls.Add(this.dtpOpenDate);
+            this.Controls.Add(this.txtAddress);
+            this.Controls.Add(this.txtIDCard);
             this.Controls.Add(this.txtCustomerName);
-            this.Controls.Add(this.lblInterestRate);
-            this.Controls.Add(this.lblTerm);
+            this.Controls.Add(this.txtPassbookType);
+            this.Controls.Add(this.lblPassbookIDValue);
             this.Controls.Add(this.lblInitialDeposit);
+            this.Controls.Add(this.lblOpenDate);
+            this.Controls.Add(this.lblAddress);
+            this.Controls.Add(this.lblIDCard);
             this.Controls.Add(this.lblCustomerName);
+            this.Controls.Add(this.lblPassbookType);
+            this.Controls.Add(this.lblPassbookID);
+            this.Controls.Add(this.lblPassbookTitle);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
             this.Name = "OpenNewPassbookForm";
             this.Text = "Mở sổ tiết kiệm mới";
+            this.Load += new System.EventHandler(this.OpenNewPassbookForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
         }

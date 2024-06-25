@@ -49,6 +49,7 @@
             this.btnManageCustomers.TabIndex = 1;
             this.btnManageCustomers.Text = "Quản lý khách hàng";
             this.btnManageCustomers.UseVisualStyleBackColor = true;
+            this.btnManageCustomers.Click += new System.EventHandler(this.btnManageCustomers_Click);
             // 
             // btnTransactionHistory
             // 
@@ -59,6 +60,7 @@
             this.btnTransactionHistory.TabIndex = 2;
             this.btnTransactionHistory.Text = "Lịch sử giao dịch";
             this.btnTransactionHistory.UseVisualStyleBackColor = true;
+            this.btnTransactionHistory.Click += new System.EventHandler(this.btnTransactionHistory_Click);
             // 
             // btnChangeRegulations
             // 
@@ -69,6 +71,7 @@
             this.btnChangeRegulations.TabIndex = 3;
             this.btnChangeRegulations.Text = "Thay đổi quy định";
             this.btnChangeRegulations.UseVisualStyleBackColor = true;
+            this.btnChangeRegulations.Click += new System.EventHandler(this.btnChangeRegulations_Click);
             // 
             // btnOpenCloseAccount
             // 
@@ -101,6 +104,7 @@
             this.btnRegisterEmployee.TabIndex = 6;
             this.btnRegisterEmployee.Text = "Đăng ký nhân viên";
             this.btnRegisterEmployee.UseVisualStyleBackColor = true;
+            this.btnRegisterEmployee.Click += new System.EventHandler(this.btnRegisterEmployee_Click);
             // 
             // btnLogout
             // 

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SQLite; // Sử dụng thư viện SQLite
 using System.Windows.Forms;
 
-namespace ManagerRegisterForm
+namespace BankManagement
 {
     public partial class frmDangKyNV : Form
     {
-        private string connectionString = "Data Source=YOUR_SERVER_NAME;Initial Catalog=YOUR_DATABASE_NAME;Integrated Security=True";
+        private string connectionString = "Data Source=DATA.db;Version=3;";
 
         public frmDangKyNV()
         {
@@ -25,25 +25,25 @@ namespace ManagerRegisterForm
             {
                 string maNV = txtMaNV.Text;
                 string tenNV = txtTenNV.Text;
+                string chucVu = txtChucVu.Text;
+                string sdt = txtSDT.Text;
                 string gioiTinh = cboGioiTinh.SelectedItem.ToString();
-                string email = txtEmail.Text;
                 string diaChi = txtDiaChi.Text;
-                string tenTK = txtTenTK.Text;
                 string matKhau = txtMK.Text;
 
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SQLiteConnection conn = new SQLiteConnection(connectionString))
                 {
                     try
                     {
                         conn.Open();
-                        string query = "INSERT INTO Employees (MaNV, TenNV, GioiTinh, NgaySinh, Email, DiaChi, TenTK, MatKhau) VALUES (@MaNV, @TenNV, @GioiTinh, @NgaySinh, @Email, @DiaChi, @TenTK, @MatKhau)";
-                        SqlCommand cmd = new SqlCommand(query, conn);
+                        string query = "INSERT INTO NhanVien (MaNV, TenNV, ChucVu, SDT, GioiTinh, DiaChi, MatKhau) VALUES (@MaNV, @TenNV, @ChucVu, @SDT, @GioiTinh, @DiaChi, @MatKhau)";
+                        SQLiteCommand cmd = new SQLiteCommand(query, conn);
                         cmd.Parameters.AddWithValue("@MaNV", maNV);
                         cmd.Parameters.AddWithValue("@TenNV", tenNV);
+                        cmd.Parameters.AddWithValue("@ChucVu", chucVu);
+                        cmd.Parameters.AddWithValue("@SDT", sdt);
                         cmd.Parameters.AddWithValue("@GioiTinh", gioiTinh);
-                        cmd.Parameters.AddWithValue("@Email", email);
                         cmd.Parameters.AddWithValue("@DiaChi", diaChi);
-                        cmd.Parameters.AddWithValue("@TenTK", tenTK);
                         cmd.Parameters.AddWithValue("@MatKhau", matKhau);
 
                         cmd.ExecuteNonQuery();
@@ -96,15 +96,37 @@ namespace ManagerRegisterForm
                 errTenNV.SetError(txtTenNV, string.Empty);
             }
 
-            // Validate Email
-            if (string.IsNullOrWhiteSpace(txtEmail.Text))
+            // Validate ChucVu
+            if (string.IsNullOrWhiteSpace(txtChucVu.Text))
             {
-                errEmail.SetError(txtEmail, "Email không được để trống.");
+                errChucVu.SetError(txtChucVu, "Chức vụ không được để trống.");
                 isValid = false;
             }
             else
             {
-                errEmail.SetError(txtEmail, string.Empty);
+                errChucVu.SetError(txtChucVu, string.Empty);
+            }
+
+            // Validate SDT
+            if (string.IsNullOrWhiteSpace(txtSDT.Text))
+            {
+                errChucVu.SetError(txtSDT, "Số điện thoại không được để trống.");
+                isValid = false;
+            }
+            else
+            {
+                errChucVu.SetError(txtSDT, string.Empty);
+            }
+
+            // Validate GioiTinh
+            if (cboGioiTinh.SelectedIndex < 0)
+            {
+                errGT.SetError(cboGioiTinh, "Giới tính không được để trống.");
+                isValid = false;
+            }
+            else
+            {
+                errGT.SetError(cboGioiTinh, string.Empty);
             }
 
             // Validate DiaChi
@@ -118,18 +140,7 @@ namespace ManagerRegisterForm
                 errDC.SetError(txtDiaChi, string.Empty);
             }
 
-            // Validate TenTK
-            if (string.IsNullOrWhiteSpace(txtTenTK.Text))
-            {
-                errTenTK.SetError(txtTenTK, "Tên tài khoản không được để trống.");
-                isValid = false;
-            }
-            else
-            {
-                errTenTK.SetError(txtTenTK, string.Empty);
-            }
-
-            // Validate MK
+            // Validate MatKhau
             if (string.IsNullOrWhiteSpace(txtMK.Text))
             {
                 errMK.SetError(txtMK, "Mật khẩu không được để trống.");
@@ -151,29 +162,18 @@ namespace ManagerRegisterForm
                 errMK.SetError(txtNhapLaiMK, string.Empty);
             }
 
-            // Validate GioiTinh
-            if (cboGioiTinh.SelectedIndex < 0)
-            {
-                errGT.SetError(cboGioiTinh, "Giới tính không được để trống.");
-                isValid = false;
-            }
-            else
-            {
-                errGT.SetError(cboGioiTinh, string.Empty);
-            }
-
             return isValid;
         }
 
         private void LoadEmployeeData()
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-                    string query = "SELECT * FROM Employees";
-                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                    string query = "SELECT * FROM NhanVien";
+                    SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
                     dataGridViewDSNV.DataSource = dt;
@@ -183,19 +183,6 @@ namespace ManagerRegisterForm
                     MessageBox.Show("Lỗi: " + ex.Message);
                 }
             }
-        }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // frmDangKyNV
-            // 
-            this.ClientSize = new System.Drawing.Size(282, 253);
-            this.Name = "frmDangKyNV";
-            this.Load += new System.EventHandler(this.frmDangKyNV_Load_1);
-            this.ResumeLayout(false);
-
         }
 
         private void frmDangKyNV_Load_1(object sender, EventArgs e)

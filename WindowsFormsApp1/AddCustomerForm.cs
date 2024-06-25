@@ -6,7 +6,7 @@ namespace BankManagement
 {
     public partial class AddCustomerForm : Form
     {
-        private string connectionString = "Data Source=Passbook_data.db;Version=3;";
+        private string connectionString = "Data Source=DATA.db;Version=3;";
 
         public AddCustomerForm()
         {

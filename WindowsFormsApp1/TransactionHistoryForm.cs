@@ -5,15 +5,18 @@ namespace BankManagement
 {
     public partial class TransactionHistoryForm : Form
     {
-        public TransactionHistoryForm()
+        private string username; // Thêm thuộc tính username
+
+        public TransactionHistoryForm(string username) // Thay đổi constructor để nhận username
         {
             InitializeComponent();
+            this.username = username; // Lưu trữ username khi khởi tạo form
         }
 
         private void btnBackToMain_Click(object sender, EventArgs e)
         {
             this.Close();
-            MainForm mainForm = new MainForm();
+            MainForm mainForm = new MainForm(username); // Truyền username vào MainForm
             mainForm.Show();
         }
 
@@ -33,10 +36,6 @@ namespace BankManagement
             dataGridView1.Columns.Add("SavingsAccountID", "Mã sổ tiết kiệm");
             dataGridView1.Columns.Add("TransactionDate", "Ngày tháng giao dịch");
             dataGridView1.Columns.Add("Amount", "Số tiền"); // Added a column for transaction amount
-
-            // Add some dummy transactions
-            dataGridView1.Rows.Add("GD001", "Gửi tiền", "KH001", "STK001", "01/01/2024", "1000000");
-            dataGridView1.Rows.Add("GD002", "Rút tiền", "KH002", "STK002", "05/01/2024", "500000");
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)

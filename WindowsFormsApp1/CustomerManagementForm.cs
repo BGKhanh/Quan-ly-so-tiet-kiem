@@ -1,23 +1,32 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
 using System.Windows.Forms;
 
 namespace BankManagement
 {
     public partial class CustomerManagementForm : Form
     {
-        private string connectionString = "Data Source=Passbook_data.db;Version=3;";
+        private string databaseFile = "DATA.db";
+        private string databasePath;
+        private string connectionString;
+        private string username; // Thêm thuộc tính username
 
-        public CustomerManagementForm()
+        public CustomerManagementForm(string username)
         {
             InitializeComponent();
+            this.username = username; // Lưu trữ username khi khởi tạo form
+
+            // Khởi tạo databasePath và connectionString trong constructor
+            databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseFile);
+            connectionString = $"Data Source={databasePath};Version=3;";
         }
 
         private void btnBackToMain_Click(object sender, EventArgs e)
         {
             this.Close();
-            MainForm mainForm = new MainForm();
+            MainForm mainForm = new MainForm(username); // Truyền username vào MainForm
             mainForm.Show();
         }
 
@@ -32,7 +41,7 @@ namespace BankManagement
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT MaKH, TenKH, CMND, DiaChi FROM khachhang";
+                string query = "SELECT MaKH, TenKH, \"CMND/CCCD\", SDT, GioiTinh, DiaChi FROM KhachHang";
                 SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -62,7 +71,7 @@ namespace BankManagement
                 if (reader.Read())
                 {
                     string customerName = reader["TenKH"].ToString();
-                    string cmnd = reader["CMND"].ToString();
+                    string cmnd = reader["CMND/CCCD"].ToString();
                     string gioiTinh = reader["GioiTinh"].ToString();
                     string diaChi = reader["DiaChi"].ToString();
 
