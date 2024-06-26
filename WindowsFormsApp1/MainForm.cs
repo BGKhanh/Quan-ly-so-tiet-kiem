@@ -82,14 +82,14 @@ namespace BankManagement
 
         private void btnManageDatabase_Click(object sender, EventArgs e)
         {
-            TransactionForm transactionForm = new TransactionForm();
+            TransactionForm transactionForm = new TransactionForm(_username);
             transactionForm.Show();
             this.Close();
         }
 
         private void btnRegisterEmployee_Click(object sender, EventArgs e)
         {
-            frmDangKyNV addEmployeeForm = new frmDangKyNV();
+            frmDangKyNV addEmployeeForm = new frmDangKyNV(_username);
             addEmployeeForm.Show();
             this.Close();
         }

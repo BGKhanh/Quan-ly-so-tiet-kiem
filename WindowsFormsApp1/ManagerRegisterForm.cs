@@ -2,16 +2,19 @@
 using System.Data;
 using System.Data.SQLite; // Sử dụng thư viện SQLite
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace BankManagement
 {
     public partial class frmDangKyNV : Form
     {
         private string connectionString = "Data Source=DATA.db;Version=3;";
+        private string username;
 
-        public frmDangKyNV()
+        public frmDangKyNV(string username)
         {
             InitializeComponent();
+            this.username = username;
         }
 
         private void frmDangKyNV_Load(object sender, EventArgs e)
@@ -63,6 +66,8 @@ namespace BankManagement
         private void btnThoat_Click(object sender, EventArgs e)
         {
             this.Close();
+            MainForm mainForm = new MainForm(username); // Truyền username vào MainForm
+            mainForm.Show();
         }
 
         private void dataGridViewDSNV_CellContentClick(object sender, DataGridViewCellEventArgs e)

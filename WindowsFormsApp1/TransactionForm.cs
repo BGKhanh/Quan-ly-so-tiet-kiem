@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace BankManagement
 {
     public partial class TransactionForm : Form
     {
         private string connectionString = "Data Source=DATA.db;Version=3;";
+        private string username;
 
-        public TransactionForm()
+        public TransactionForm(string username)
         {
             InitializeComponent();
+            this.username = username;
         }
 
         private void TransactionForm_Load(object sender, EventArgs e)
@@ -72,6 +75,8 @@ namespace BankManagement
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+            MainForm mainForm = new MainForm(username); // Truyền username vào MainForm
+            mainForm.Show();
         }
 
         private bool PerformTransaction(string transactionType, string passbookID, decimal amount)

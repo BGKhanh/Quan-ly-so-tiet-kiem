@@ -111,7 +111,7 @@
             // 
             // btnLogout
             // 
-            this.btnLogout.Location = new System.Drawing.Point(4, 274);
+            this.btnLogout.Location = new System.Drawing.Point(4, 319);
             this.btnLogout.Margin = new System.Windows.Forms.Padding(4);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(187, 37);
@@ -119,17 +119,6 @@
             this.btnLogout.Text = "Đăng xuất";
             this.btnLogout.UseVisualStyleBackColor = true;
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
-            // 
-            // btnGenerateReports
-            // 
-            this.btnGenerateReports.Location = new System.Drawing.Point(4, 319);
-            this.btnGenerateReports.Margin = new System.Windows.Forms.Padding(4);
-            this.btnGenerateReports.Name = "btnGenerateReports";
-            this.btnGenerateReports.Size = new System.Drawing.Size(187, 37);
-            this.btnGenerateReports.TabIndex = 8;
-            this.btnGenerateReports.Text = "Báo cáo";
-            this.btnGenerateReports.UseVisualStyleBackColor = true;
-            this.btnGenerateReports.Click += new System.EventHandler(this.btnGenerateReports_Click);
             // 
             // lblWelcome
             // 
@@ -178,6 +167,17 @@
             this.pnlButtons.Size = new System.Drawing.Size(200, 369);
             this.pnlButtons.TabIndex = 10;
             // 
+            // btnGenerateReports
+            // 
+            this.btnGenerateReports.Location = new System.Drawing.Point(4, 274);
+            this.btnGenerateReports.Margin = new System.Windows.Forms.Padding(4);
+            this.btnGenerateReports.Name = "btnGenerateReports";
+            this.btnGenerateReports.Size = new System.Drawing.Size(187, 37);
+            this.btnGenerateReports.TabIndex = 8;
+            this.btnGenerateReports.Text = "Báo cáo";
+            this.btnGenerateReports.UseVisualStyleBackColor = true;
+            this.btnGenerateReports.Click += new System.EventHandler(this.btnGenerateReports_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -196,6 +196,7 @@
             this.pnlButtons.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         private System.Windows.Forms.Label lblProjectName;
