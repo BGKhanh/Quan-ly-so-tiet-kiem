@@ -189,5 +189,10 @@ namespace BankManagement
         {
 
         }
+
+        private void frmDangKyNV_Load_2(object sender, EventArgs e)
+        {
+
+        }
     }
 }

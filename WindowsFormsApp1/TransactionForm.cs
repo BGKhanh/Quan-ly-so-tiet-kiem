@@ -1,22 +1,47 @@
 ﻿using System;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Windows.Forms;
 
 namespace BankManagement
 {
     public partial class TransactionForm : Form
     {
-        private string connectionString = "DATA.db"; // Update with your actual connection string
+        private string connectionString = "Data Source=DATA.db;Version=3;";
 
         public TransactionForm()
         {
             InitializeComponent();
         }
 
+        private void TransactionForm_Load(object sender, EventArgs e)
+        {
+            int newTransactionID = GetNextTransactionID();
+            lblTransactionIDValue.Text = newTransactionID.ToString();
+        }
+
+        private int GetNextTransactionID()
+        {
+            int lastTransactionID = 0;
+            string query = "SELECT MAX(CAST(SUBSTR(MaGD, 4) AS INTEGER)) FROM GiaoDich";
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(query, connection);
+                connection.Open();
+                var result = command.ExecuteScalar();
+                if (result != DBNull.Value)
+                {
+                    lastTransactionID = Convert.ToInt32(result);
+                }
+            }
+
+            return lastTransactionID + 1;
+        }
+
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             string transactionType = cbTransactionType.SelectedItem.ToString();
-            string accountNumber = txtAccountNumber.Text;
+            string passbookID = cbPassbookID.SelectedItem.ToString();
             decimal amount;
 
             if (!decimal.TryParse(txtAmount.Text, out amount))
@@ -25,13 +50,13 @@ namespace BankManagement
                 return;
             }
 
-            if (string.IsNullOrEmpty(accountNumber))
+            if (string.IsNullOrEmpty(passbookID))
             {
-                MessageBox.Show("Số tài khoản không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Mã sổ tiết kiệm không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            bool success = PerformTransaction(transactionType, accountNumber, amount);
+            bool success = PerformTransaction(transactionType, passbookID, amount);
 
             if (success)
             {
@@ -49,9 +74,9 @@ namespace BankManagement
             this.Close();
         }
 
-        private bool PerformTransaction(string transactionType, string accountNumber, decimal amount)
+        private bool PerformTransaction(string transactionType, string passbookID, decimal amount)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 try
                 {
@@ -59,21 +84,22 @@ namespace BankManagement
                     string query;
                     if (transactionType == "Gửi Tiền")
                     {
-                        query = "UPDATE Accounts SET Balance = Balance + @Amount WHERE AccountNumber = @AccountNumber";
+                        query = "UPDATE SoTietKiem SET SoDu = SoDu + @Amount WHERE MaSo = @PassbookID AND NgayDenHan = @Today";
                     }
                     else if (transactionType == "Rút Tiền")
                     {
-                        query = "UPDATE Accounts SET Balance = Balance - @Amount WHERE AccountNumber = @AccountNumber AND Balance >= @Amount";
+                        query = "UPDATE SoTietKiem SET SoDu = SoDu - @Amount WHERE MaSo = @PassbookID AND SoDu >= @Amount";
                     }
                     else
                     {
                         return false;
                     }
 
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@Amount", amount);
-                        cmd.Parameters.AddWithValue("@AccountNumber", accountNumber);
+                        cmd.Parameters.AddWithValue("@PassbookID", passbookID);
+                        cmd.Parameters.AddWithValue("@Today", DateTime.Now.ToString("yyyy-MM-dd"));
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return rowsAffected > 0;
@@ -87,9 +113,107 @@ namespace BankManagement
             }
         }
 
-        private void TransactionForm_Load(object sender, EventArgs e)
+        private void txtCustomerID_Leave(object sender, EventArgs e)
         {
+            string customerID = txtCustomerID.Text;
 
+            if (string.IsNullOrEmpty(customerID))
+            {
+                MessageBox.Show("Vui lòng nhập mã khách hàng.");
+                return;
+            }
+
+            string query = "SELECT TenKH, \"CMND/CCCD\" FROM KhachHang WHERE MaKH = @MaKH";
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(query, connection);
+                command.Parameters.AddWithValue("@MaKH", customerID);
+                connection.Open();
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    txtCustomerName.Text = reader["TenKH"].ToString();
+                    txtIDCard.Text = reader["CMND/CCCD"].ToString();
+                    LoadPassbookIDs(customerID);
+                }
+                else
+                {
+                    MessageBox.Show("Mã khách hàng không hợp lệ.");
+                    txtCustomerName.Text = string.Empty;
+                    txtIDCard.Text = string.Empty;
+                    cbPassbookID.Items.Clear();
+                }
+            }
+        }
+
+        private void LoadPassbookIDs(string customerID)
+        {
+            string query = "SELECT MaSo FROM SoTietKiem WHERE MaKH = @MaKH";
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(query, connection);
+                command.Parameters.AddWithValue("@MaKH", customerID);
+                connection.Open();
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                cbPassbookID.Items.Clear();
+                while (reader.Read())
+                {
+                    cbPassbookID.Items.Add(reader["MaSo"].ToString());
+                }
+
+                if (cbPassbookID.Items.Count > 0)
+                {
+                    cbPassbookID.SelectedIndex = 0;
+                    LoadPassbookDetails(cbPassbookID.SelectedItem.ToString());
+                }
+            }
+        }
+
+        private void cbPassbookID_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadPassbookDetails(cbPassbookID.SelectedItem.ToString());
+        }
+
+        private void LoadPassbookDetails(string passbookID)
+        {
+            string query = @"
+    SELECT 
+        stk.MaKyHan, 
+        stk.SoDu, 
+        julianday(@Today) - julianday(stk.NgayLapSo) / lk.ThoiGianGoiToiThieu AS ThoiGianConLai 
+    FROM 
+        SoTietKiem stk 
+    JOIN 
+        LoaiKyHan lk 
+    ON 
+        stk.MaKyHan = lk.MaKyHan 
+    WHERE 
+        stk.MaSo = @MaSo";
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(query, connection);
+                command.Parameters.AddWithValue("@MaSo", passbookID);
+                command.Parameters.AddWithValue("@Today", DateTime.Now.ToString("yyyy-MM-dd"));
+                connection.Open();
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    lblPassbookType.Text = reader["MaKyHan"].ToString();
+                    lblRemainingTime.Text = reader["ThoiGianConLai"].ToString() + " ngày";
+                    lblBalance.Text = reader["SoDu"].ToString() + " VND";
+                }
+            }
+        }
+
+        private void cbTransactionType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Thêm bất kỳ logic nào cần thiết khi loại giao dịch thay đổi.
         }
     }
 }

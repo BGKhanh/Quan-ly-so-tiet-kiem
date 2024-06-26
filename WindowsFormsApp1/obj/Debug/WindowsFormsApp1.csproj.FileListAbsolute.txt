@@ -34,6 +34,7 @@ C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankMana
 C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.PassbookManagementForm.resources
 C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Properties.Resources.resources
 C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.RegulationForm.resources
+C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.ReportForm.resources
 C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.TransactionForm.resources
 C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\BankManagement.TransactionHistoryForm.resources
 C:\Users\ADMIN\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.GenerateResource.cache

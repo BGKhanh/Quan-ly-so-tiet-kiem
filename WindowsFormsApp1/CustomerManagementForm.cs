@@ -114,7 +114,7 @@ namespace BankManagement
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT MaKH, TenKH, CMND, DiaChi FROM khachhang WHERE MaKH LIKE @search OR TenKH LIKE @search OR CMND LIKE @search OR DiaChi LIKE @search";
+                string query = "SELECT MaKH, TenKH, \"CMND/CCCD\", DiaChi FROM khachhang WHERE MaKH LIKE @search OR TenKH LIKE @search OR \"CMND/CCCD\" LIKE @search OR DiaChi LIKE @search";
                 SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
                 da.SelectCommand.Parameters.AddWithValue("@search", "%" + searchValue + "%");
                 DataTable dt = new DataTable();

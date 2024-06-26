@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\opennewpassbookform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\opennewpassbookform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\loginform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\loginform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\windowsformsapp1\\opennewpassbookform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\opennewpassbookform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\windowsformsapp1\\opennewpassbookform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\opennewpassbookform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\transactionform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\transactionform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\transactionform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\transactionform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\transactionform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\transactionform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -127,38 +135,65 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "OpenNewPassbookForm.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\OpenNewPassbookForm.Designer.cs",
-              "RelativeDocumentMoniker": "WindowsFormsApp1\\OpenNewPassbookForm.Designer.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\OpenNewPassbookForm.Designer.cs",
-              "RelativeToolTip": "WindowsFormsApp1\\OpenNewPassbookForm.Designer.cs",
-              "ViewState": "AQIAANIAAAAAAAAAAADwv+QAAAABAAAA",
+              "Title": "LoginForm.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\LoginForm.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\LoginForm.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\LoginForm.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\LoginForm.cs",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAxwD8AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T18:23:29.681Z",
+              "WhenOpened": "2024-06-26T14:17:06.476Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "OpenNewPassbookForm.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\OpenNewPassbookForm.cs",
-              "RelativeDocumentMoniker": "WindowsFormsApp1\\OpenNewPassbookForm.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\OpenNewPassbookForm.cs",
-              "RelativeToolTip": "WindowsFormsApp1\\OpenNewPassbookForm.cs",
-              "ViewState": "AQIAAEEAAAAAAAAAAAAwwFcAAAAAAAAA",
+              "Title": "MainForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\MainForm.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\MainForm.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\MainForm.cs [Design]",
+              "RelativeToolTip": "WindowsFormsApp1\\MainForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T18:23:28.574Z"
+              "WhenOpened": "2024-06-25T18:43:25.941Z",
+              "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "OpenNewPassbookForm.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\OpenNewPassbookForm.cs",
-              "RelativeDocumentMoniker": "WindowsFormsApp1\\OpenNewPassbookForm.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\OpenNewPassbookForm.cs [Design]",
-              "RelativeToolTip": "WindowsFormsApp1\\OpenNewPassbookForm.cs [Design]",
+              "Title": "TransactionForm.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\TransactionForm.Designer.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\TransactionForm.Designer.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\TransactionForm.Designer.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\TransactionForm.Designer.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T18:23:07.61Z"
+              "WhenOpened": "2024-06-26T12:32:30.296Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TransactionForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\TransactionForm.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\TransactionForm.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\TransactionForm.cs [Design]",
+              "RelativeToolTip": "WindowsFormsApp1\\TransactionForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-26T12:32:56.729Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TransactionForm.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\TransactionForm.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\TransactionForm.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\TransactionForm.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\TransactionForm.cs",
+              "ViewState": "AQIAALQAAAAAAAAAAIA0wLoAAABEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-26T11:01:47.866Z",
+              "EditorCaption": ""
             }
           ]
         }
