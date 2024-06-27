@@ -96,7 +96,7 @@ namespace BankManagement
 
         private void btnGenerateReports_Click(object sender, EventArgs e)
         {
-            ReportForm reportForm = new ReportForm();
+            ReportForm reportForm = new ReportForm(_username);
             reportForm.Show();
             this.Close();
         }

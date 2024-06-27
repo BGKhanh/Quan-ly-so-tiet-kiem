@@ -185,6 +185,7 @@
             this.btnThoat.TabIndex = 13;
             this.btnThoat.Text = "Thoát";
             this.btnThoat.UseVisualStyleBackColor = true;
+            this.btnThoat.Click += new System.EventHandler(this.btnThoat_Click);
             // 
             // dataGridViewDSNV
             // 
@@ -353,7 +354,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmDangKyNV";
             this.Text = "Đăng ký nhân viên";
-            this.Load += new System.EventHandler(this.frmDangKyNV_Load_2);
+            this.Load += new System.EventHandler(this.frmDangKyNV_Load_1);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDSNV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errTenNV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errEmail)).EndInit();

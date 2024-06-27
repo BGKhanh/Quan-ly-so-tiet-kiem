@@ -16,8 +16,11 @@
         private System.Windows.Forms.Label lblPassbookID;
         private System.Windows.Forms.ComboBox cbPassbookID;
         private System.Windows.Forms.Label lblPassbookType;
+        private System.Windows.Forms.TextBox txtPassbookType;
         private System.Windows.Forms.Label lblRemainingTime;
+        private System.Windows.Forms.TextBox txtRemainingTime;
         private System.Windows.Forms.Label lblBalance;
+        private System.Windows.Forms.TextBox txtBalance;
         private System.Windows.Forms.Label lblAmount;
         private System.Windows.Forms.TextBox txtAmount;
         private System.Windows.Forms.Button btnSubmit;
@@ -47,8 +50,11 @@
             this.lblPassbookID = new System.Windows.Forms.Label();
             this.cbPassbookID = new System.Windows.Forms.ComboBox();
             this.lblPassbookType = new System.Windows.Forms.Label();
+            this.txtPassbookType = new System.Windows.Forms.TextBox();
             this.lblRemainingTime = new System.Windows.Forms.Label();
+            this.txtRemainingTime = new System.Windows.Forms.TextBox();
             this.lblBalance = new System.Windows.Forms.Label();
+            this.txtBalance = new System.Windows.Forms.TextBox();
             this.lblAmount = new System.Windows.Forms.Label();
             this.txtAmount = new System.Windows.Forms.TextBox();
             this.btnSubmit = new System.Windows.Forms.Button();
@@ -60,7 +66,7 @@
             this.lblTransactionID.AutoSize = true;
             this.lblTransactionID.Location = new System.Drawing.Point(30, 30);
             this.lblTransactionID.Name = "lblTransactionID";
-            this.lblTransactionID.Size = new System.Drawing.Size(83, 16);
+            this.lblTransactionID.Size = new System.Drawing.Size(91, 16);
             this.lblTransactionID.TabIndex = 0;
             this.lblTransactionID.Text = "Mã Giao Dịch:";
             // 
@@ -87,7 +93,7 @@
             this.cbTransactionType.Items.AddRange(new object[] {
             "Rút Tiền",
             "Gửi Tiền"});
-            this.cbTransactionType.Location = new System.Drawing.Point(130, 67);
+            this.cbTransactionType.Location = new System.Drawing.Point(134, 67);
             this.cbTransactionType.Name = "cbTransactionType";
             this.cbTransactionType.Size = new System.Drawing.Size(200, 24);
             this.cbTransactionType.TabIndex = 3;
@@ -98,13 +104,13 @@
             this.lblCustomerID.AutoSize = true;
             this.lblCustomerID.Location = new System.Drawing.Point(30, 110);
             this.lblCustomerID.Name = "lblCustomerID";
-            this.lblCustomerID.Size = new System.Drawing.Size(94, 16);
+            this.lblCustomerID.Size = new System.Drawing.Size(105, 16);
             this.lblCustomerID.TabIndex = 4;
             this.lblCustomerID.Text = "Mã Khách Hàng:";
             // 
             // txtCustomerID
             // 
-            this.txtCustomerID.Location = new System.Drawing.Point(130, 107);
+            this.txtCustomerID.Location = new System.Drawing.Point(134, 107);
             this.txtCustomerID.Name = "txtCustomerID";
             this.txtCustomerID.Size = new System.Drawing.Size(200, 22);
             this.txtCustomerID.TabIndex = 5;
@@ -115,13 +121,13 @@
             this.lblCustomerName.AutoSize = true;
             this.lblCustomerName.Location = new System.Drawing.Point(30, 150);
             this.lblCustomerName.Name = "lblCustomerName";
-            this.lblCustomerName.Size = new System.Drawing.Size(76, 16);
+            this.lblCustomerName.Size = new System.Drawing.Size(74, 16);
             this.lblCustomerName.TabIndex = 6;
             this.lblCustomerName.Text = "Tên Khách:";
             // 
             // txtCustomerName
             // 
-            this.txtCustomerName.Location = new System.Drawing.Point(130, 147);
+            this.txtCustomerName.Location = new System.Drawing.Point(134, 147);
             this.txtCustomerName.Name = "txtCustomerName";
             this.txtCustomerName.ReadOnly = true;
             this.txtCustomerName.Size = new System.Drawing.Size(200, 22);
@@ -132,13 +138,13 @@
             this.lblIDCard.AutoSize = true;
             this.lblIDCard.Location = new System.Drawing.Point(30, 190);
             this.lblIDCard.Name = "lblIDCard";
-            this.lblIDCard.Size = new System.Drawing.Size(48, 16);
+            this.lblIDCard.Size = new System.Drawing.Size(91, 16);
             this.lblIDCard.TabIndex = 8;
-            this.lblIDCard.Text = "CMND:";
+            this.lblIDCard.Text = "CMND/CCCD:";
             // 
             // txtIDCard
             // 
-            this.txtIDCard.Location = new System.Drawing.Point(130, 187);
+            this.txtIDCard.Location = new System.Drawing.Point(134, 187);
             this.txtIDCard.Name = "txtIDCard";
             this.txtIDCard.ReadOnly = true;
             this.txtIDCard.Size = new System.Drawing.Size(200, 22);
@@ -149,14 +155,14 @@
             this.lblPassbookID.AutoSize = true;
             this.lblPassbookID.Location = new System.Drawing.Point(30, 230);
             this.lblPassbookID.Name = "lblPassbookID";
-            this.lblPassbookID.Size = new System.Drawing.Size(88, 16);
+            this.lblPassbookID.Size = new System.Drawing.Size(108, 16);
             this.lblPassbookID.TabIndex = 10;
             this.lblPassbookID.Text = "Mã Sổ Tiết Kiệm:";
             // 
             // cbPassbookID
             // 
             this.cbPassbookID.FormattingEnabled = true;
-            this.cbPassbookID.Location = new System.Drawing.Point(130, 227);
+            this.cbPassbookID.Location = new System.Drawing.Point(134, 227);
             this.cbPassbookID.Name = "cbPassbookID";
             this.cbPassbookID.Size = new System.Drawing.Size(200, 24);
             this.cbPassbookID.TabIndex = 11;
@@ -167,73 +173,102 @@
             this.lblPassbookType.AutoSize = true;
             this.lblPassbookType.Location = new System.Drawing.Point(30, 270);
             this.lblPassbookType.Name = "lblPassbookType";
-            this.lblPassbookType.Size = new System.Drawing.Size(84, 16);
+            this.lblPassbookType.Size = new System.Drawing.Size(82, 16);
             this.lblPassbookType.TabIndex = 12;
             this.lblPassbookType.Text = "Loại Kỳ Hạn:";
+            // 
+            // txtPassbookType
+            // 
+            this.txtPassbookType.Location = new System.Drawing.Point(134, 267);
+            this.txtPassbookType.Name = "txtPassbookType";
+            this.txtPassbookType.ReadOnly = true;
+            this.txtPassbookType.Size = new System.Drawing.Size(200, 22);
+            this.txtPassbookType.TabIndex = 13;
             // 
             // lblRemainingTime
             // 
             this.lblRemainingTime.AutoSize = true;
             this.lblRemainingTime.Location = new System.Drawing.Point(30, 310);
             this.lblRemainingTime.Name = "lblRemainingTime";
-            this.lblRemainingTime.Size = new System.Drawing.Size(94, 16);
-            this.lblRemainingTime.TabIndex = 13;
-            this.lblRemainingTime.Text = "Thời Gian Còn Lại:";
+            this.lblRemainingTime.Size = new System.Drawing.Size(103, 16);
+            this.lblRemainingTime.TabIndex = 14;
+            this.lblRemainingTime.Text = "Thời Gian Còn:";
+            // 
+            // txtRemainingTime
+            // 
+            this.txtRemainingTime.Location = new System.Drawing.Point(134, 307);
+            this.txtRemainingTime.Name = "txtRemainingTime";
+            this.txtRemainingTime.ReadOnly = true;
+            this.txtRemainingTime.Size = new System.Drawing.Size(200, 22);
+            this.txtRemainingTime.TabIndex = 15;
             // 
             // lblBalance
             // 
             this.lblBalance.AutoSize = true;
             this.lblBalance.Location = new System.Drawing.Point(30, 350);
             this.lblBalance.Name = "lblBalance";
-            this.lblBalance.Size = new System.Drawing.Size(62, 16);
-            this.lblBalance.TabIndex = 14;
+            this.lblBalance.Size = new System.Drawing.Size(44, 16);
+            this.lblBalance.TabIndex = 16;
             this.lblBalance.Text = "Số Dư:";
+            // 
+            // txtBalance
+            // 
+            this.txtBalance.Location = new System.Drawing.Point(134, 347);
+            this.txtBalance.Name = "txtBalance";
+            this.txtBalance.ReadOnly = true;
+            this.txtBalance.Size = new System.Drawing.Size(200, 22);
+            this.txtBalance.TabIndex = 17;
             // 
             // lblAmount
             // 
             this.lblAmount.AutoSize = true;
             this.lblAmount.Location = new System.Drawing.Point(30, 390);
             this.lblAmount.Name = "lblAmount";
-            this.lblAmount.Size = new System.Drawing.Size(57, 16);
-            this.lblAmount.TabIndex = 15;
+            this.lblAmount.Size = new System.Drawing.Size(52, 16);
+            this.lblAmount.TabIndex = 18;
             this.lblAmount.Text = "Số Tiền:";
             // 
             // txtAmount
             // 
-            this.txtAmount.Location = new System.Drawing.Point(130, 387);
+            this.txtAmount.Location = new System.Drawing.Point(134, 387);
             this.txtAmount.Name = "txtAmount";
             this.txtAmount.Size = new System.Drawing.Size(200, 22);
-            this.txtAmount.TabIndex = 16;
+            this.txtAmount.TabIndex = 19;
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(130, 430);
+            this.btnSubmit.Location = new System.Drawing.Point(134, 430);
             this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(75, 23);
-            this.btnSubmit.TabIndex = 17;
+            this.btnSubmit.Size = new System.Drawing.Size(90, 30);
+            this.btnSubmit.TabIndex = 20;
             this.btnSubmit.Text = "Xác Nhận";
             this.btnSubmit.UseVisualStyleBackColor = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(255, 430);
+            this.btnCancel.Location = new System.Drawing.Point(244, 430);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 18;
+            this.btnCancel.Size = new System.Drawing.Size(90, 30);
+            this.btnCancel.TabIndex = 21;
             this.btnCancel.Text = "Hủy Bỏ";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // TransactionForm
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 481);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSubmit);
             this.Controls.Add(this.txtAmount);
             this.Controls.Add(this.lblAmount);
+            this.Controls.Add(this.txtBalance);
             this.Controls.Add(this.lblBalance);
+            this.Controls.Add(this.txtRemainingTime);
             this.Controls.Add(this.lblRemainingTime);
+            this.Controls.Add(this.txtPassbookType);
             this.Controls.Add(this.lblPassbookType);
             this.Controls.Add(this.cbPassbookID);
             this.Controls.Add(this.lblPassbookID);
@@ -248,10 +283,10 @@
             this.Controls.Add(this.lblTransactionIDValue);
             this.Controls.Add(this.lblTransactionID);
             this.Name = "TransactionForm";
-            this.Text = "Thực Hiện Giao Dịch";
-            this.Load += new System.EventHandler(this.TransactionForm_Load);
+            this.Text = "TransactionForm";
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
     }
 }

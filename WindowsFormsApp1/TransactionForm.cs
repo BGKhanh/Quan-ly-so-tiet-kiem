@@ -189,7 +189,7 @@ namespace BankManagement
     SELECT 
         stk.MaKyHan, 
         stk.SoDu, 
-        julianday(@Today) - julianday(stk.NgayLapSo) / lk.ThoiGianGoiToiThieu AS ThoiGianConLai 
+        (lk.ThoiGianGoiToiThieu - julianday(@Today) + julianday(stk.NgayLapSo)) AS ThoiGianConLai 
     FROM 
         SoTietKiem stk 
     JOIN 
@@ -209,9 +209,9 @@ namespace BankManagement
 
                 if (reader.Read())
                 {
-                    lblPassbookType.Text = reader["MaKyHan"].ToString();
-                    lblRemainingTime.Text = reader["ThoiGianConLai"].ToString() + " ngày";
-                    lblBalance.Text = reader["SoDu"].ToString() + " VND";
+                    txtPassbookType.Text = reader["MaKyHan"].ToString();
+                    txtRemainingTime.Text = reader["ThoiGianConLai"].ToString() + " ngày";
+                    txtBalance.Text = reader["SoDu"].ToString() + " VND";
                 }
             }
         }
