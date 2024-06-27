@@ -3,36 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\addcustomerform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\addcustomerform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\customermanagementform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\customermanagementform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\addcustomerform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\addcustomerform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\customermanagementform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\customermanagementform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\addcustomerform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\addcustomerform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\customermanagementform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\customermanagementform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\managerregisterform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\managerregisterform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\regulationform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\regulationform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\managerregisterform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\managerregisterform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\regulationform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\regulationform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\windowsformsapp1\\transactionform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\transactionform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\windowsformsapp1\\transactionform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\transactionform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\managerregisterform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\managerregisterform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|c:\\users\\admin\\source\\repos\\windowsformsapp1\\windowsformsapp1\\regulationform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{161D5E11-51E1-4BBB-A86B-2C5A6F56B695}|WindowsFormsApp1\\WindowsFormsApp1.csproj|solutionrelative:windowsformsapp1\\regulationform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 25,
+          "SelectedChildIndex": 26,
           "Children": [
             {
               "$type": "Bookmark",
@@ -146,104 +138,79 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AddCustomerForm.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\AddCustomerForm.Designer.cs",
-              "RelativeDocumentMoniker": "WindowsFormsApp1\\AddCustomerForm.Designer.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\AddCustomerForm.Designer.cs",
-              "RelativeToolTip": "WindowsFormsApp1\\AddCustomerForm.Designer.cs",
-              "ViewState": "AQIAABMAAAAAAAAAAAAQwNYAAAAAAAAA",
+              "DocumentIndex": 1,
+              "Title": "CustomerManagementForm.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\CustomerManagementForm.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\CustomerManagementForm.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\CustomerManagementForm.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\CustomerManagementForm.cs",
+              "ViewState": "AQIAAEoAAAAAAAAAAAAAwMsAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T14:59:29.695Z",
+              "WhenOpened": "2024-06-27T06:53:30.666Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CustomerManagementForm.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\CustomerManagementForm.Designer.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\CustomerManagementForm.Designer.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\CustomerManagementForm.Designer.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\CustomerManagementForm.Designer.cs",
+              "ViewState": "AQIAAJcAAAAAAAAAAAAkwJ8AAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-27T06:53:41.906Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "AddCustomerForm.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\AddCustomerForm.cs",
-              "RelativeDocumentMoniker": "WindowsFormsApp1\\AddCustomerForm.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\AddCustomerForm.cs",
-              "RelativeToolTip": "WindowsFormsApp1\\AddCustomerForm.cs",
-              "ViewState": "AQIAAB4AAAAAAAAAAAAYwGcAAAAAAAAA",
+              "Title": "CustomerManagementForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\CustomerManagementForm.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\CustomerManagementForm.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\CustomerManagementForm.cs [Design]",
+              "RelativeToolTip": "WindowsFormsApp1\\CustomerManagementForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T14:56:17.91Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AddCustomerForm.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\AddCustomerForm.cs",
-              "RelativeDocumentMoniker": "WindowsFormsApp1\\AddCustomerForm.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\AddCustomerForm.cs [Design]",
-              "RelativeToolTip": "WindowsFormsApp1\\AddCustomerForm.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T14:56:15.868Z",
+              "WhenOpened": "2024-06-27T06:53:26.087Z",
               "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "ManagerRegisterForm.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\ManagerRegisterForm.cs",
-              "RelativeDocumentMoniker": "WindowsFormsApp1\\ManagerRegisterForm.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\ManagerRegisterForm.cs",
-              "RelativeToolTip": "WindowsFormsApp1\\ManagerRegisterForm.cs",
-              "ViewState": "AQIAADsAAAAAAAAAAAAgwEUAAAAcAAAA",
+              "Title": "RegulationForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\RegulationForm.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\RegulationForm.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\RegulationForm.cs [Design]",
+              "RelativeToolTip": "WindowsFormsApp1\\RegulationForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T14:43:16.982Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ManagerRegisterForm.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\ManagerRegisterForm.cs",
-              "RelativeDocumentMoniker": "WindowsFormsApp1\\ManagerRegisterForm.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\ManagerRegisterForm.cs [Design]",
-              "RelativeToolTip": "WindowsFormsApp1\\ManagerRegisterForm.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T14:43:15.274Z",
+              "WhenOpened": "2024-06-27T07:29:29.486Z",
               "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ManagerRegisterForm.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\ManagerRegisterForm.Designer.cs",
-              "RelativeDocumentMoniker": "WindowsFormsApp1\\ManagerRegisterForm.Designer.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\ManagerRegisterForm.Designer.cs",
-              "RelativeToolTip": "WindowsFormsApp1\\ManagerRegisterForm.Designer.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "DocumentIndex": 4,
+              "Title": "RegulationForm.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\RegulationForm.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\RegulationForm.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\RegulationForm.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\RegulationForm.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAANMAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T14:43:14.08Z",
+              "WhenOpened": "2024-06-27T07:30:32.979Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "TransactionForm.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\TransactionForm.cs",
-              "RelativeDocumentMoniker": "WindowsFormsApp1\\TransactionForm.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\TransactionForm.cs",
-              "RelativeToolTip": "WindowsFormsApp1\\TransactionForm.cs",
-              "ViewState": "AQIAAEYAAAAAAAAAAAAkwA8AAAAlAAAA",
+              "Title": "RegulationForm.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\RegulationForm.Designer.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\RegulationForm.Designer.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\RegulationForm.Designer.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\RegulationForm.Designer.cs",
+              "ViewState": "AQIAAGkAAAAAAAAAAAAYwG4AAABBAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T11:01:47.866Z",
+              "WhenOpened": "2024-06-27T07:30:28.138Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "TransactionForm.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\TransactionForm.cs",
-              "RelativeDocumentMoniker": "WindowsFormsApp1\\TransactionForm.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\WindowsFormsApp1\\WindowsFormsApp1\\TransactionForm.cs [Design]",
-              "RelativeToolTip": "WindowsFormsApp1\\TransactionForm.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T12:32:56.729Z",
-              "EditorCaption": " [Design]"
             }
           ]
         }

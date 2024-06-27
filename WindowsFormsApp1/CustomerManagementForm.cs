@@ -11,14 +11,14 @@ namespace BankManagement
         private string databaseFile = "DATA.db";
         private string databasePath;
         private string connectionString;
-        private string username; // Thêm thuộc tính username
+        private string username;
+        private bool isEditMode = false;
 
         public CustomerManagementForm(string username)
         {
             InitializeComponent();
-            this.username = username; // Lưu trữ username khi khởi tạo form
+            this.username = username;
 
-            // Khởi tạo databasePath và connectionString trong constructor
             databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseFile);
             connectionString = $"Data Source={databasePath};Version=3;";
         }
@@ -26,13 +26,12 @@ namespace BankManagement
         private void btnBackToMain_Click(object sender, EventArgs e)
         {
             this.Close();
-            MainForm mainForm = new MainForm(username); // Truyền username vào MainForm
+            MainForm mainForm = new MainForm(username);
             mainForm.Show();
         }
 
         private void CustomerManagementForm_Load(object sender, EventArgs e)
         {
-            // Load customer data into DataGridView
             LoadCustomerData();
         }
 
@@ -53,81 +52,152 @@ namespace BankManagement
         {
             if (e.RowIndex >= 0)
             {
-                string customerID = dataGridView1.Rows[e.RowIndex].Cells["MaKH"].Value.ToString();
-                ShowCustomerDetails(customerID);
+                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Field");
+                dt.Columns.Add("Value");
+                dt.Rows.Add("MaKH", row.Cells["MaKH"].Value.ToString());
+                dt.Rows.Add("TenKH", row.Cells["TenKH"].Value.ToString());
+                dt.Rows.Add("CMND/CCCD", row.Cells["CMND/CCCD"].Value.ToString());
+                dt.Rows.Add("SDT", row.Cells["SDT"].Value.ToString());
+                dt.Rows.Add("GioiTinh", row.Cells["GioiTinh"].Value.ToString());
+                dt.Rows.Add("DiaChi", row.Cells["DiaChi"].Value.ToString());
+                detailsDataGridView.DataSource = dt;
+                detailsPanel.Visible = true;
+                SetReadOnlyMode(true);
             }
         }
 
-        private void ShowCustomerDetails(string customerID)
+        private void SetReadOnlyMode(bool isReadOnly)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            foreach (DataGridViewRow row in detailsDataGridView.Rows)
             {
-                conn.Open();
-                string query = "SELECT * FROM khachhang WHERE MaKH = @MaKH";
-                SQLiteCommand cmd = new SQLiteCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaKH", customerID);
-                SQLiteDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
-                {
-                    string customerName = reader["TenKH"].ToString();
-                    string cmnd = reader["CMND/CCCD"].ToString();
-                    string gioiTinh = reader["GioiTinh"].ToString();
-                    string diaChi = reader["DiaChi"].ToString();
-
-                    lblDetails.Text = $"Chi tiết khách hàng: \nMã: {customerID}\nTên: {customerName}\nCMND: {cmnd}\nGiới tính: {gioiTinh}\nĐịa chỉ: {diaChi}";
-                    detailsPanel.Visible = true;
-                }
+                row.Cells["Value"].ReadOnly = isReadOnly;
             }
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            // Edit customer
-            AddCustomerForm detailForm = new AddCustomerForm();
-            detailForm.Show();
+            if (!isEditMode)
+            {
+                SetReadOnlyMode(false);
+                isEditMode = true;
+                btnEdit.Text = "Lưu";
+            }
+            else
+            {
+                SaveChanges();
+                SetReadOnlyMode(true);
+                isEditMode = false;
+                btnEdit.Text = "Chỉnh sửa";
+            }
+        }
+
+        private void SaveChanges()
+        {
+            string maKH = detailsDataGridView.Rows[0].Cells["Value"].Value.ToString();
+            string tenKH = detailsDataGridView.Rows[1].Cells["Value"].Value.ToString();
+            string cmnd = detailsDataGridView.Rows[2].Cells["Value"].Value.ToString();
+            string sdt = detailsDataGridView.Rows[3].Cells["Value"].Value.ToString();
+            string gioiTinh = detailsDataGridView.Rows[4].Cells["Value"].Value.ToString();
+            string diaChi = detailsDataGridView.Rows[5].Cells["Value"].Value.ToString();
+
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                string query = "UPDATE KhachHang SET TenKH = @TenKH, \"CMND/CCCD\" = @CMND, SDT = @SDT, GioiTinh = @GioiTinh, DiaChi = @DiaChi WHERE MaKH = @MaKH";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaKH", maKH);
+                    cmd.Parameters.AddWithValue("@TenKH", tenKH);
+                    cmd.Parameters.AddWithValue("@CMND", cmnd);
+                    cmd.Parameters.AddWithValue("@SDT", sdt);
+                    cmd.Parameters.AddWithValue("@GioiTinh", gioiTinh);
+                    cmd.Parameters.AddWithValue("@DiaChi", diaChi);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            LoadCustomerData();
+            MessageBox.Show("Thông tin khách hàng đã được cập nhật.");
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            // Delete customer
-            string customerID = dataGridView1.SelectedRows[0].Cells["MaKH"].Value.ToString();
-            DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa khách hàng này không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (result == DialogResult.Yes)
+            if (detailsDataGridView.Rows.Count > 0)
             {
-                using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+                string customerID = detailsDataGridView.Rows[0].Cells["Value"].Value.ToString();
+                DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa khách hàng này không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
                 {
-                    conn.Open();
-                    string query = "DELETE FROM khachhang WHERE MaKH = @MaKH";
-                    SQLiteCommand cmd = new SQLiteCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@MaKH", customerID);
-                    cmd.ExecuteNonQuery();
+                    bool success = false;
+                    int attempts = 0;
+                    while (!success && attempts < 5)
+                    {
+                        try
+                        {
+                            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+                            {
+                                conn.Open();
+                                string query = "DELETE FROM khachhang WHERE MaKH = @MaKH";
+                                using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@MaKH", customerID);
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+                            success = true;
+                            LoadCustomerData();
+                            detailsPanel.Visible = false;
+                            MessageBox.Show("Đã xóa khách hàng.");
+                        }
+                        catch (SQLiteException ex) when (ex.Message.Contains("database is locked"))
+                        {
+                            attempts++;
+                            System.Threading.Thread.Sleep(500);
+                        }
+                    }
+                    if (!success)
+                    {
+                        MessageBox.Show("Không thể xóa khách hàng do cơ sở dữ liệu đang bị khóa. Vui lòng thử lại sau.");
+                    }
                 }
-                LoadCustomerData(); // Refresh the data grid
-                MessageBox.Show("Đã xóa khách hàng.");
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một khách hàng để xóa.");
             }
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
             string searchValue = txtSearch.Text;
+            string searchField = cmbSearchField.SelectedItem?.ToString();
+
+            if (string.IsNullOrEmpty(searchField))
+            {
+                MessageBox.Show("Vui lòng chọn trường tìm kiếm.");
+                return;
+            }
+
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT MaKH, TenKH, \"CMND/CCCD\", DiaChi FROM khachhang WHERE MaKH LIKE @search OR TenKH LIKE @search OR \"CMND/CCCD\" LIKE @search OR DiaChi LIKE @search";
-                SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
-                da.SelectCommand.Parameters.AddWithValue("@search", "%" + searchValue + "%");
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                dataGridView1.DataSource = dt;
+                string query = $"SELECT MaKH, TenKH, \"CMND/CCCD\", SDT, GioiTinh, DiaChi FROM KhachHang WHERE {searchField} LIKE @SearchValue";
+                using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn))
+                {
+                    da.SelectCommand.Parameters.AddWithValue("@SearchValue", "%" + searchValue + "%");
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dataGridView1.DataSource = dt;
+                }
             }
         }
 
         private void btnAddCustomer_Click(object sender, EventArgs e)
         {
-            AddCustomerForm addCustomerForm = new AddCustomerForm();
-            addCustomerForm.ShowDialog();
-            LoadCustomerData(); // Refresh the data grid after adding new customer
+            AddCustomerForm registerForm = new AddCustomerForm();
+            registerForm.ShowDialog();
+            LoadCustomerData();
         }
     }
 }

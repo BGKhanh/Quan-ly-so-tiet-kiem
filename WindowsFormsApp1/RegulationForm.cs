@@ -24,7 +24,7 @@ namespace BankManagement
             dt.Columns.Add("Lãi Suất");
             dt.Columns.Add("Thời Gian Gửi Tối Thiểu");
 
-            string connectionString = "Data Source=DATA;Version=3;";
+            string connectionString = "Data Source=DATA.db;Version=3;";
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 try
@@ -64,6 +64,7 @@ namespace BankManagement
                 txtTerm.Text = row.Cells["Tên Kỳ Hạn"].Value.ToString();
                 txtInterestRate.Text = row.Cells["Lãi Suất"].Value.ToString();
                 txtMinTerm.Text = row.Cells["Thời Gian Gửi Tối Thiểu"].Value.ToString();
+                txtTermID.Text = row.Cells["Mã Kỳ Hạn"].Value.ToString();
             }
         }
 
@@ -72,6 +73,36 @@ namespace BankManagement
             txtTerm.Clear();
             txtInterestRate.Clear();
             txtMinTerm.Clear();
+            txtTermID.Text = GetNextTermID();
+        }
+
+        private string GetNextTermID()
+        {
+            string nextID = "KH001";
+            string connectionString = "Data Source=DATA.db;Version=3;";
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT MaKyHan FROM LoaiKyHan ORDER BY MaKyHan DESC LIMIT 1";
+                    using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+                    {
+                        object result = cmd.ExecuteScalar();
+                        if (result != null)
+                        {
+                            string lastID = result.ToString();
+                            int idNumber = int.Parse(lastID.Substring(2)) + 1;
+                            nextID = "KH" + idNumber.ToString("D3");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Có lỗi xảy ra khi lấy mã kỳ hạn mới: " + ex.Message);
+                }
+            }
+            return nextID;
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -79,22 +110,24 @@ namespace BankManagement
             string term = txtTerm.Text;
             string interestRate = txtInterestRate.Text;
             string minTerm = txtMinTerm.Text;
+            string termID = txtTermID.Text;
 
-            if (string.IsNullOrEmpty(term) || string.IsNullOrEmpty(interestRate) || string.IsNullOrEmpty(minTerm))
+            if (string.IsNullOrEmpty(term) || string.IsNullOrEmpty(interestRate) || string.IsNullOrEmpty(minTerm) || string.IsNullOrEmpty(termID))
             {
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin.");
                 return;
             }
 
-            string connectionString = "Data Source=DATA;Version=3;";
+            string connectionString = "Data Source=DATA.db;Version=3;";
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-                    string query = "UPDATE LoaiKyHan SET LaiSuat = @LaiSuat, ThoiGianGoiToiThieu = @ThoiGianGoiToiThieu WHERE TenKyHan = @TenKyHan";
+                    string query = "UPDATE LoaiKyHan SET TenKyHan = @TenKyHan, LaiSuat = @LaiSuat, ThoiGianGoiToiThieu = @ThoiGianGoiToiThieu WHERE MaKyHan = @MaKyHan";
                     using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
                     {
+                        cmd.Parameters.AddWithValue("@MaKyHan", termID);
                         cmd.Parameters.AddWithValue("@TenKyHan", term);
                         cmd.Parameters.AddWithValue("@LaiSuat", decimal.Parse(interestRate));
                         cmd.Parameters.AddWithValue("@ThoiGianGoiToiThieu", minTerm);
@@ -113,24 +146,24 @@ namespace BankManagement
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            string term = txtTerm.Text;
+            string termID = txtTermID.Text;
 
-            if (string.IsNullOrEmpty(term))
+            if (string.IsNullOrEmpty(termID))
             {
                 MessageBox.Show("Vui lòng chọn một kỳ hạn để xóa.");
                 return;
             }
 
-            string connectionString = "Data Source=DATA;Version=3;";
+            string connectionString = "Data Source=DATA.db;Version=3;";
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-                    string query = "DELETE FROM LoaiKyHan WHERE TenKyHan = @TenKyHan";
+                    string query = "DELETE FROM LoaiKyHan WHERE MaKyHan = @MaKyHan";
                     using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@TenKyHan", term);
+                        cmd.Parameters.AddWithValue("@MaKyHan", termID);
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -165,18 +198,21 @@ namespace BankManagement
             mainForm.Show();
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnBackToMain_Click(object sender, EventArgs e)
         {
             this.Close();
             MainForm mainForm = new MainForm(username);
             mainForm.Show();
         }
 
-        private void btnBackToMain_Click(object sender, EventArgs e)
+        private void txtMinTerm_TextChanged(object sender, EventArgs e)
         {
-            this.Close();
-            MainForm mainForm = new MainForm(username);
-            mainForm.Show();
+
+        }
+
+        private void groupBoxTermDetails_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }
