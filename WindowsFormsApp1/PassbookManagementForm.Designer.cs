@@ -11,6 +11,7 @@ namespace BankManagement
         private Button btnSearch;
         private DataGridView dgvSavingAccounts;
         private TextBox txtSearch;
+        private ComboBox cmbSearchField;
 
         protected override void Dispose(bool disposing)
         {
@@ -28,6 +29,7 @@ namespace BankManagement
             this.btnDeleteAccount = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
             this.txtSearch = new System.Windows.Forms.TextBox();
+            this.cmbSearchField = new System.Windows.Forms.ComboBox();
             this.dgvSavingAccounts = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSavingAccounts)).BeginInit();
             this.SuspendLayout();
@@ -67,7 +69,7 @@ namespace BankManagement
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(599, 15);
+            this.btnSearch.Location = new System.Drawing.Point(748, 15);
             this.btnSearch.Margin = new System.Windows.Forms.Padding(4);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(100, 28);
@@ -78,11 +80,25 @@ namespace BankManagement
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(406, 17);
+            this.txtSearch.Location = new System.Drawing.Point(554, 17);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(4);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(185, 22);
             this.txtSearch.TabIndex = 4;
+            // 
+            // cmbSearchField
+            // 
+            this.cmbSearchField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSearchField.FormattingEnabled = true;
+            this.cmbSearchField.Items.AddRange(new object[] {
+            "Mã Sổ",
+            "Tên Khách Hàng",
+            "CMND/CCCD",
+            "Địa Chỉ"});
+            this.cmbSearchField.Location = new System.Drawing.Point(406, 16);
+            this.cmbSearchField.Name = "cmbSearchField";
+            this.cmbSearchField.Size = new System.Drawing.Size(142, 24);
+            this.cmbSearchField.TabIndex = 6;
             // 
             // dgvSavingAccounts
             // 
@@ -91,14 +107,15 @@ namespace BankManagement
             this.dgvSavingAccounts.Margin = new System.Windows.Forms.Padding(4);
             this.dgvSavingAccounts.Name = "dgvSavingAccounts";
             this.dgvSavingAccounts.RowHeadersWidth = 51;
-            this.dgvSavingAccounts.Size = new System.Drawing.Size(800, 369);
+            this.dgvSavingAccounts.Size = new System.Drawing.Size(832, 369);
             this.dgvSavingAccounts.TabIndex = 5;
             // 
             // PassbookManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 444);
+            this.ClientSize = new System.Drawing.Size(864, 444);
+            this.Controls.Add(this.cmbSearchField);
             this.Controls.Add(this.dgvSavingAccounts);
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.btnSearch);

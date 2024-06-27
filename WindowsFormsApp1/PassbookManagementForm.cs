@@ -69,10 +69,19 @@ namespace BankManagement
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            LoadSavingAccounts(txtSearch.Text);
+            string searchValue = txtSearch.Text;
+            string searchField = cmbSearchField.SelectedItem?.ToString();
+
+            if (string.IsNullOrEmpty(searchField))
+            {
+                MessageBox.Show("Vui lòng chọn trường tìm kiếm.");
+                return;
+            }
+
+            LoadSavingAccounts(searchValue, searchField);
         }
 
-        private void LoadSavingAccounts(string searchKeyword = "")
+        private void LoadSavingAccounts(string searchKeyword = "", string searchField = "")
         {
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
@@ -96,12 +105,14 @@ namespace BankManagement
                     JOIN 
                         LoaiKyHan lk ON stk.MaKyHan = lk.MaKyHan
                     WHERE 
-                        stk.MaSo LIKE @SearchKeyword OR
-                        kh.TenKH LIKE @SearchKeyword OR
-                        kh.[CMND/CCCD] LIKE @SearchKeyword OR
-                        kh.DiaChi LIKE @SearchKeyword";
+                        (@SearchField = '' OR 
+                        (@SearchField = 'Mã Sổ' AND stk.MaSo LIKE @SearchKeyword) OR
+                        (@SearchField = 'Tên Khách Hàng' AND kh.TenKH LIKE @SearchKeyword) OR
+                        (@SearchField = 'CMND/CCCD' AND kh.[CMND/CCCD] LIKE @SearchKeyword) OR
+                        (@SearchField = 'Địa Chỉ' AND kh.DiaChi LIKE @SearchKeyword))";
 
                 SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(query, connection);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@SearchField", searchField);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@SearchKeyword", "%" + searchKeyword + "%");
 
                 DataTable dataTable = new DataTable();
@@ -113,8 +124,7 @@ namespace BankManagement
 
         private void PassbookManagementForm_Load(object sender, EventArgs e)
         {
-            // Add any additional initialization code here
-
+            cmbSearchField.SelectedIndex = 0; // Default selection for ComboBox
         }
     }
 }

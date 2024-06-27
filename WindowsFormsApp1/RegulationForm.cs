@@ -9,13 +9,6 @@ namespace BankManagement
     {
         private string username;
 
-        public RegulationForm(string username)
-        {
-            InitializeComponent();
-            this.username = username;
-            LoadCurrentRegulations();
-        }
-
         private void LoadCurrentRegulations()
         {
             DataTable dt = new DataTable();
@@ -56,26 +49,6 @@ namespace BankManagement
             dgvRegulations.DataSource = dt;
         }
 
-        private void dgvRegulations_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                DataGridViewRow row = dgvRegulations.Rows[e.RowIndex];
-                txtTerm.Text = row.Cells["Tên Kỳ Hạn"].Value.ToString();
-                txtInterestRate.Text = row.Cells["Lãi Suất"].Value.ToString();
-                txtMinTerm.Text = row.Cells["Thời Gian Gửi Tối Thiểu"].Value.ToString();
-                txtTermID.Text = row.Cells["Mã Kỳ Hạn"].Value.ToString();
-            }
-        }
-
-        private void btnAddTerm_Click(object sender, EventArgs e)
-        {
-            txtTerm.Clear();
-            txtInterestRate.Clear();
-            txtMinTerm.Clear();
-            txtTermID.Text = GetNextTermID();
-        }
-
         private string GetNextTermID()
         {
             string nextID = "KH001";
@@ -105,43 +78,76 @@ namespace BankManagement
             return nextID;
         }
 
+
+        private void btnBackToMain_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            MainForm mainForm = new MainForm(username);
+            mainForm.Show();
+        }
+
+        private void txtMinTerm_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBoxTermDetails_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RegulationForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SetFieldsReadOnly(bool readOnly)
+        {
+            txtTerm.ReadOnly = readOnly;
+            txtInterestRate.ReadOnly = readOnly;
+            txtMinTerm.ReadOnly = readOnly;
+            txtTermID.ReadOnly = readOnly;
+        }
+
+        private void ClearFields()
+        {
+            txtTerm.Clear();
+            txtInterestRate.Clear();
+            txtMinTerm.Clear();
+            txtTermID.Clear();
+        }
+
+        public RegulationForm(string username)
+        {
+            InitializeComponent();
+            this.username = username;
+            LoadCurrentRegulations();
+            SetFieldsReadOnly(true);
+        }
+
+        private void dgvRegulations_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dgvRegulations.Rows[e.RowIndex];
+                txtTerm.Text = row.Cells["Tên Kỳ Hạn"].Value.ToString();
+                txtInterestRate.Text = row.Cells["Lãi Suất"].Value.ToString();
+                txtMinTerm.Text = row.Cells["Thời Gian Gửi Tối Thiểu"].Value.ToString();
+                txtTermID.Text = row.Cells["Mã Kỳ Hạn"].Value.ToString();
+                SetFieldsReadOnly(true);
+            }
+        }
+
+        private void btnAddTerm_Click(object sender, EventArgs e)
+        {
+            ClearFields();
+            txtTermID.Text = GetNextTermID();
+            SetFieldsReadOnly(false);
+        }
+
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            string term = txtTerm.Text;
-            string interestRate = txtInterestRate.Text;
-            string minTerm = txtMinTerm.Text;
-            string termID = txtTermID.Text;
-
-            if (string.IsNullOrEmpty(term) || string.IsNullOrEmpty(interestRate) || string.IsNullOrEmpty(minTerm) || string.IsNullOrEmpty(termID))
-            {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin.");
-                return;
-            }
-
-            string connectionString = "Data Source=DATA.db;Version=3;";
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    string query = "UPDATE LoaiKyHan SET TenKyHan = @TenKyHan, LaiSuat = @LaiSuat, ThoiGianGoiToiThieu = @ThoiGianGoiToiThieu WHERE MaKyHan = @MaKyHan";
-                    using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@MaKyHan", termID);
-                        cmd.Parameters.AddWithValue("@TenKyHan", term);
-                        cmd.Parameters.AddWithValue("@LaiSuat", decimal.Parse(interestRate));
-                        cmd.Parameters.AddWithValue("@ThoiGianGoiToiThieu", minTerm);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Có lỗi xảy ra khi cập nhật dữ liệu: " + ex.Message);
-                    return;
-                }
-            }
-
-            LoadCurrentRegulations();
+            SetFieldsReadOnly(false);
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -175,6 +181,8 @@ namespace BankManagement
             }
 
             LoadCurrentRegulations();
+            ClearFields();
+            SetFieldsReadOnly(true);
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -196,23 +204,8 @@ namespace BankManagement
             this.Close();
             MainForm mainForm = new MainForm(username);
             mainForm.Show();
+            SetFieldsReadOnly(true);
         }
 
-        private void btnBackToMain_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            MainForm mainForm = new MainForm(username);
-            mainForm.Show();
-        }
-
-        private void txtMinTerm_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBoxTermDetails_Enter(object sender, EventArgs e)
-        {
-
-        }
     }
 }

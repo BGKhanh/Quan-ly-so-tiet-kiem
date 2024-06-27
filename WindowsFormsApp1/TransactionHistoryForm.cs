@@ -1,70 +1,113 @@
 ﻿using System;
+using System.Data;
+using System.Data.SQLite;
+using System.IO;
 using System.Windows.Forms;
 
 namespace BankManagement
 {
     public partial class TransactionHistoryForm : Form
     {
-        private string username; // Thêm thuộc tính username
+        private string databaseFile = "DATA.db";
+        private string databasePath;
+        private string connectionString;
+        private string username;
 
-        public TransactionHistoryForm(string username) // Thay đổi constructor để nhận username
+        public TransactionHistoryForm(string username)
         {
             InitializeComponent();
-            this.username = username; // Lưu trữ username khi khởi tạo form
+            this.username = username;
+
+            databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseFile);
+            connectionString = $"Data Source={databasePath};Version=3;";
         }
 
         private void btnBackToMain_Click(object sender, EventArgs e)
         {
             this.Close();
-            MainForm mainForm = new MainForm(username); // Truyền username vào MainForm
+            MainForm mainForm = new MainForm(username);
             mainForm.Show();
         }
 
         private void TransactionHistoryForm_Load(object sender, EventArgs e)
         {
-            // Load transaction data into DataGridView
             LoadTransactionData();
         }
 
         private void LoadTransactionData()
         {
-            // Here you would load transaction data from your database or other source
-            // For demo purposes, we will add some dummy data
-            dataGridView1.Columns.Add("TransactionID", "Mã giao dịch");
-            dataGridView1.Columns.Add("TransactionType", "Loại giao dịch");
-            dataGridView1.Columns.Add("CustomerID", "Mã khách hàng");
-            dataGridView1.Columns.Add("SavingsAccountID", "Mã sổ tiết kiệm");
-            dataGridView1.Columns.Add("TransactionDate", "Ngày tháng giao dịch");
-            dataGridView1.Columns.Add("Amount", "Số tiền"); // Added a column for transaction amount
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT MaGD, LoaiGiaoDich, MaKH, MaSo, MaNV, NgayGiaoDich, SoTien FROM GiaoDich";
+                SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dataGridView1.DataSource = dt;
+            }
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
-                // Show transaction details
-                string transactionID = dataGridView1.Rows[e.RowIndex].Cells["TransactionID"].Value.ToString();
-                string transactionType = dataGridView1.Rows[e.RowIndex].Cells["TransactionType"].Value.ToString();
-                string customerID = dataGridView1.Rows[e.RowIndex].Cells["CustomerID"].Value.ToString();
-                string savingsAccountID = dataGridView1.Rows[e.RowIndex].Cells["SavingsAccountID"].Value.ToString();
-                string transactionDate = dataGridView1.Rows[e.RowIndex].Cells["TransactionDate"].Value.ToString();
-                string amount = dataGridView1.Rows[e.RowIndex].Cells["Amount"].Value.ToString();
+                string transactionID = dataGridView1.Rows[e.RowIndex].Cells["MaGD"].Value.ToString();
+                LoadTransactionDetails(transactionID);
+            }
+        }
 
-                lblDetails.Text = $"Chi tiết giao dịch: \nMã: {transactionID}\nLoại: {transactionType}\nMã KH: {customerID}\nMã STK: {savingsAccountID}\nNgày: {transactionDate}\nSố tiền: {amount}";
+        private void LoadTransactionDetails(string transactionID)
+        {
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                string query = $@"SELECT 
+                                    G.MaGD, G.LoaiGiaoDich, G.NgayGiaoDich, G.SoTien,
+                                    KH.MaKH, KH.TenKH, KH.[CMND/CCCD], KH.SDT, KH.GioiTinh, KH.DiaChi,
+                                    NV.MaNV, NV.TenNV, NV.ChucVu,
+                                    STK.MaSo, STK.SoDu, STK.NgayLapSo,
+                                    LK.MaKyHan, LK.TenKyHan, LK.LaiSuat, LK.ThoiGianGoiToiThieu
+                                FROM GiaoDich G
+                                JOIN KhachHang KH ON G.MaKH = KH.MaKH
+                                JOIN NhanVien NV ON G.MaNV = NV.MaNV
+                                JOIN SoTietKiem STK ON G.MaSo = STK.MaSo
+                                JOIN LoaiKyHan LK ON STK.MaKyHan = LK.MaKyHan
+                                WHERE G.MaGD = @TransactionID";
+                SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
+                da.SelectCommand.Parameters.AddWithValue("@TransactionID", transactionID);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                detailsDataGridView.DataSource = dt;
                 detailsPanel.Visible = true;
             }
         }
 
-        private void btnEdit_Click(object sender, EventArgs e)
+        private void btnSearch_Click(object sender, EventArgs e)
         {
-            // Edit transaction
-            MessageBox.Show("Chức năng chỉnh sửa đang được phát triển.");
-        }
+            string searchValue = txtSearch.Text;
+            string searchField = cmbSearchField.SelectedItem?.ToString();
 
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            // Delete transaction
-            MessageBox.Show("Chức năng xóa đang được phát triển.");
+            if (string.IsNullOrEmpty(searchField))
+            {
+                MessageBox.Show("Vui lòng chọn trường tìm kiếm.");
+                return;
+            }
+
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                string query = $@"SELECT 
+                                    MaGD, LoaiGiaoDich, MaKH, MaSo, MaNV, NgayGiaoDich, SoTien
+                                FROM GiaoDich
+                                WHERE {searchField} LIKE @SearchValue";
+                using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn))
+                {
+                    da.SelectCommand.Parameters.AddWithValue("@SearchValue", "%" + searchValue + "%");
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dataGridView1.DataSource = dt;
+                }
+            }
         }
     }
 }

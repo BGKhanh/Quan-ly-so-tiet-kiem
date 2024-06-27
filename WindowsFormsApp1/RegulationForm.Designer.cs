@@ -251,6 +251,7 @@ namespace BankManagement
             this.Controls.Add(this.btnBackToMain);
             this.Name = "RegulationForm";
             this.Text = "Quy Định Ngân Hàng";
+            this.Load += new System.EventHandler(this.RegulationForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvRegulations)).EndInit();
             this.groupBoxTermDetails.ResumeLayout(false);
             this.groupBoxTermDetails.PerformLayout();
