@@ -190,7 +190,7 @@
             this.lblRemainingTime.AutoSize = true;
             this.lblRemainingTime.Location = new System.Drawing.Point(30, 310);
             this.lblRemainingTime.Name = "lblRemainingTime";
-            this.lblRemainingTime.Size = new System.Drawing.Size(103, 16);
+            this.lblRemainingTime.Size = new System.Drawing.Size(95, 16);
             this.lblRemainingTime.TabIndex = 14;
             this.lblRemainingTime.Text = "Thời Gian Còn:";
             // 
@@ -207,7 +207,7 @@
             this.lblBalance.AutoSize = true;
             this.lblBalance.Location = new System.Drawing.Point(30, 350);
             this.lblBalance.Name = "lblBalance";
-            this.lblBalance.Size = new System.Drawing.Size(44, 16);
+            this.lblBalance.Size = new System.Drawing.Size(47, 16);
             this.lblBalance.TabIndex = 16;
             this.lblBalance.Text = "Số Dư:";
             // 
@@ -224,7 +224,7 @@
             this.lblAmount.AutoSize = true;
             this.lblAmount.Location = new System.Drawing.Point(30, 390);
             this.lblAmount.Name = "lblAmount";
-            this.lblAmount.Size = new System.Drawing.Size(52, 16);
+            this.lblAmount.Size = new System.Drawing.Size(57, 16);
             this.lblAmount.TabIndex = 18;
             this.lblAmount.Text = "Số Tiền:";
             // 
@@ -284,6 +284,7 @@
             this.Controls.Add(this.lblTransactionID);
             this.Name = "TransactionForm";
             this.Text = "TransactionForm";
+            this.Load += new System.EventHandler(this.TransactionForm_Load_1);
             this.ResumeLayout(false);
             this.PerformLayout();
 

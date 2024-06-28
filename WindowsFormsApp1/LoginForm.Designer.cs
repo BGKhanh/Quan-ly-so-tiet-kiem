@@ -25,6 +25,7 @@ namespace BankManagement
             this.btnMinimize = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
             this.btnFullscreen = new System.Windows.Forms.Button();
+            this.chkShowPassword = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // txtUsername
@@ -46,10 +47,11 @@ namespace BankManagement
             this.txtPassword.Text = "Mật khẩu";
             this.txtPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtPassword.Click += new System.EventHandler(this.txtPassword_Click);
+            this.txtPassword.UseSystemPasswordChar = true;
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(74, 140);
+            this.btnLogin.Location = new System.Drawing.Point(74, 160);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(200, 30);
             this.btnLogin.TabIndex = 2;
@@ -101,11 +103,23 @@ namespace BankManagement
             this.btnFullscreen.UseVisualStyleBackColor = true;
             this.btnFullscreen.Click += new System.EventHandler(this.btnFullscreen_Click);
             // 
+            // chkShowPassword
+            // 
+            this.chkShowPassword.AutoSize = true;
+            this.chkShowPassword.Location = new System.Drawing.Point(74, 130);
+            this.chkShowPassword.Name = "chkShowPassword";
+            this.chkShowPassword.Size = new System.Drawing.Size(128, 20);
+            this.chkShowPassword.TabIndex = 7;
+            this.chkShowPassword.Text = "Hiển thị mật khẩu";
+            this.chkShowPassword.UseVisualStyleBackColor = true;
+            this.chkShowPassword.CheckedChanged += new System.EventHandler(this.chkShowPassword_CheckedChanged);
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(350, 200);
+            this.Controls.Add(this.chkShowPassword);
             this.Controls.Add(this.btnFullscreen);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnMinimize);
@@ -131,5 +145,6 @@ namespace BankManagement
         private System.Windows.Forms.Button btnMinimize;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Button btnFullscreen;
+        private System.Windows.Forms.CheckBox chkShowPassword;
     }
 }

@@ -125,6 +125,7 @@ namespace BankManagement
                 // Restore previous state
                 this.WindowState = FormWindowState.Normal;
                 this.Bounds = previousBounds;
+                this.FormBorderStyle = FormBorderStyle.Sizable;
                 RestoreControlSizes();
                 isFullscreen = false;
             }
@@ -173,6 +174,11 @@ namespace BankManagement
                 control.Height = (int)(control.Height * scaleFactorHeight);
                 control.Font = new Font(control.Font.FontFamily, control.Font.Size * Math.Min(scaleFactorWidth, scaleFactorHeight), control.Font.Style);
             }
+        }
+
+        private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            txtPassword.UseSystemPasswordChar = !chkShowPassword.Checked;
         }
 
         private void txtUsername_TextChanged(object sender, EventArgs e)

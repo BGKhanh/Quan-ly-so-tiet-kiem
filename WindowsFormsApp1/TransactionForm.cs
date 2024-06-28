@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace BankManagement
 {
     public partial class TransactionForm : Form
     {
-        private string connectionString = "Data Source=DATA.db;Version=3;";
+        private DatabaseManager databaseManager = DatabaseManager.Instance;
         private string username;
 
         public TransactionForm(string username)
@@ -26,15 +25,25 @@ namespace BankManagement
         {
             int lastTransactionID = 0;
             string query = "SELECT MAX(CAST(SUBSTR(MaGD, 4) AS INTEGER)) FROM GiaoDich";
+            SQLiteDataReader reader = null;
 
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            try
             {
-                SQLiteCommand command = new SQLiteCommand(query, connection);
-                connection.Open();
-                var result = command.ExecuteScalar();
-                if (result != DBNull.Value)
+                reader = databaseManager.ExecuteQuery(query);
+                if (reader.Read() && !reader.IsDBNull(0))
                 {
-                    lastTransactionID = Convert.ToInt32(result);
+                    lastTransactionID = reader.GetInt32(0);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
                 }
             }
 
@@ -81,41 +90,39 @@ namespace BankManagement
 
         private bool PerformTransaction(string transactionType, string passbookID, decimal amount)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            bool success = false;
+            string query = string.Empty;
+
+            try
             {
-                try
+                if (transactionType == "Gửi Tiền")
                 {
-                    conn.Open();
-                    string query;
-                    if (transactionType == "Gửi Tiền")
-                    {
-                        query = "UPDATE SoTietKiem SET SoDu = SoDu + @Amount WHERE MaSo = @PassbookID AND NgayDenHan = @Today";
-                    }
-                    else if (transactionType == "Rút Tiền")
-                    {
-                        query = "UPDATE SoTietKiem SET SoDu = SoDu - @Amount WHERE MaSo = @PassbookID AND SoDu >= @Amount";
-                    }
-                    else
-                    {
-                        return false;
-                    }
-
-                    using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Amount", amount);
-                        cmd.Parameters.AddWithValue("@PassbookID", passbookID);
-                        cmd.Parameters.AddWithValue("@Today", DateTime.Now.ToString("yyyy-MM-dd"));
-
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        return rowsAffected > 0;
-                    }
+                    query = "UPDATE SoTietKiem SET SoDu = SoDu + @Amount WHERE MaSo = @PassbookID AND NgayDenHan = @Today";
                 }
-                catch (Exception ex)
+                else if (transactionType == "Rút Tiền")
                 {
-                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    query = "UPDATE SoTietKiem SET SoDu = SoDu - @Amount WHERE MaSo = @PassbookID AND SoDu >= @Amount";
+                }
+                else
+                {
                     return false;
                 }
+
+                SQLiteParameter[] parameters = {
+                    new SQLiteParameter("@Amount", amount),
+                    new SQLiteParameter("@PassbookID", passbookID),
+                    new SQLiteParameter("@Today", DateTime.Now.ToString("yyyy-MM-dd"))
+                };
+
+                databaseManager.ExecuteNonQuery(query, parameters);
+                success = true;
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return success;
         }
 
         private void txtCustomerID_Leave(object sender, EventArgs e)
@@ -129,33 +136,36 @@ namespace BankManagement
             }
 
             string query = "SELECT TenKH, \"CMND/CCCD\" FROM KhachHang WHERE MaKH = @MaKH";
+            SQLiteDataReader reader = null;
 
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            try
             {
-                try
-                {
-                    SQLiteCommand command = new SQLiteCommand(query, connection);
-                    command.Parameters.AddWithValue("@MaKH", customerID);
-                    connection.Open();
-                    SQLiteDataReader reader = command.ExecuteReader();
+                SQLiteParameter[] parameters = { new SQLiteParameter("@MaKH", customerID) };
+                reader = databaseManager.ExecuteQuery(query, parameters);
 
-                    if (reader.Read())
-                    {
-                        txtCustomerName.Text = reader["TenKH"].ToString();
-                        txtIDCard.Text = reader["CMND/CCCD"].ToString();
-                        LoadPassbookIDs(customerID);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Mã khách hàng không hợp lệ.");
-                        txtCustomerName.Text = string.Empty;
-                        txtIDCard.Text = string.Empty;
-                        cbPassbookID.Items.Clear();
-                    }
-                }
-                catch (Exception ex)
+                if (reader.Read())
                 {
-                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtCustomerName.Text = reader["TenKH"].ToString();
+                    txtIDCard.Text = reader["CMND/CCCD"].ToString();
+                    LoadPassbookIDs(customerID);
+                }
+                else
+                {
+                    MessageBox.Show("Mã khách hàng không hợp lệ.");
+                    txtCustomerName.Text = string.Empty;
+                    txtIDCard.Text = string.Empty;
+                    cbPassbookID.Items.Clear();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
                 }
             }
         }
@@ -163,31 +173,34 @@ namespace BankManagement
         private void LoadPassbookIDs(string customerID)
         {
             string query = "SELECT MaSo FROM SoTietKiem WHERE MaKH = @MaKH";
+            SQLiteDataReader reader = null;
 
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            try
             {
-                try
+                SQLiteParameter[] parameters = { new SQLiteParameter("@MaKH", customerID) };
+                reader = databaseManager.ExecuteQuery(query, parameters);
+
+                cbPassbookID.Items.Clear();
+                while (reader.Read())
                 {
-                    SQLiteCommand command = new SQLiteCommand(query, connection);
-                    command.Parameters.AddWithValue("@MaKH", customerID);
-                    connection.Open();
-                    SQLiteDataReader reader = command.ExecuteReader();
-
-                    cbPassbookID.Items.Clear();
-                    while (reader.Read())
-                    {
-                        cbPassbookID.Items.Add(reader["MaSo"].ToString());
-                    }
-
-                    if (cbPassbookID.Items.Count > 0)
-                    {
-                        cbPassbookID.SelectedIndex = 0;
-                        LoadPassbookDetails(cbPassbookID.SelectedItem.ToString());
-                    }
+                    cbPassbookID.Items.Add(reader["MaSo"].ToString());
                 }
-                catch (Exception ex)
+
+                if (cbPassbookID.Items.Count > 0)
                 {
-                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    cbPassbookID.SelectedIndex = 0;
+                    LoadPassbookDetails(cbPassbookID.SelectedItem.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
                 }
             }
         }
@@ -212,27 +225,33 @@ namespace BankManagement
         stk.MaKyHan = lk.MaKyHan 
     WHERE 
         stk.MaSo = @MaSo";
+            SQLiteDataReader reader = null;
 
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            try
             {
-                try
-                {
-                    SQLiteCommand command = new SQLiteCommand(query, connection);
-                    command.Parameters.AddWithValue("@MaSo", passbookID);
-                    command.Parameters.AddWithValue("@Today", DateTime.Now.ToString("yyyy-MM-dd"));
-                    connection.Open();
-                    SQLiteDataReader reader = command.ExecuteReader();
+                SQLiteParameter[] parameters = {
+                    new SQLiteParameter("@MaSo", passbookID),
+                    new SQLiteParameter("@Today", DateTime.Now.ToString("yyyy-MM-dd"))
+                };
 
-                    if (reader.Read())
-                    {
-                        txtPassbookType.Text = reader["MaKyHan"].ToString();
-                        txtRemainingTime.Text = reader["ThoiGianConLai"].ToString() + " ngày";
-                        txtBalance.Text = reader["SoDu"].ToString() + " VND";
-                    }
-                }
-                catch (Exception ex)
+                reader = databaseManager.ExecuteQuery(query, parameters);
+
+                if (reader.Read())
                 {
-                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtPassbookType.Text = reader["MaKyHan"].ToString();
+                    txtRemainingTime.Text = reader["ThoiGianConLai"].ToString() + " ngày";
+                    txtBalance.Text = reader["SoDu"].ToString() + " VND";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
                 }
             }
         }

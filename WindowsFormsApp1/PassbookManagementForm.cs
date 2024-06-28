@@ -91,30 +91,34 @@ namespace BankManagement
         private void LoadSavingAccounts(string searchKeyword = "", string searchField = "")
         {
             string query = @"
-                SELECT 
-                    stk.MaSo AS 'Mã Sổ', 
-                    lk.TenKyHan AS 'Loại Tiết Kiệm', 
-                    kh.TenKH AS 'Tên Khách Hàng', 
-                    kh.[CMND/CCCD] AS 'CMND/CCCD',
-                    kh.DiaChi AS 'Địa Chỉ',
-                    stk.NgayLapSo AS 'Ngày Mở Sổ', 
-                    stk.SoDu AS 'Số Tiền Gửi',
-                    CASE
-                        WHEN stk.SoDu = 0 THEN 'Đóng'
-                        ELSE 'Đang Mở'
-                    END AS 'Tình Trạng'
-                FROM 
-                    SoTietKiem stk
-                JOIN 
-                    KhachHang kh ON stk.MaKH = kh.MaKH
-                JOIN 
-                    LoaiKyHan lk ON stk.MaKyHan = lk.MaKyHan
-                WHERE 
-                    (@SearchField = '' OR 
-                    (@SearchField = 'Mã Sổ' AND stk.MaSo LIKE @SearchKeyword) OR
-                    (@SearchField = 'Tên Khách Hàng' AND kh.TenKH LIKE @SearchKeyword) OR
-                    (@SearchField = 'CMND/CCCD' AND kh.[CMND/CCCD] LIKE @SearchKeyword) OR
-                    (@SearchField = 'Địa Chỉ' AND kh.DiaChi LIKE @SearchKeyword))";
+        SELECT 
+            stk.MaSo AS 'Mã Sổ', 
+            lk.TenKyHan AS 'Loại Tiết Kiệm', 
+            kh.TenKH AS 'Tên Khách Hàng', 
+            kh.[CMND/CCCD] AS 'CMND/CCCD',
+            kh.DiaChi AS 'Địa Chỉ',
+            strftime('%d/%m/%Y', stk.NgayLapSo) AS 'Ngày Mở Sổ', 
+            CASE
+                WHEN stk.NgayDongSo IS NOT NULL THEN strftime('%d/%m/%Y', stk.NgayDongSo)
+                ELSE ''
+            END AS 'Ngày Đóng Sổ',
+            stk.SoDu AS 'Số Tiền Gửi',
+            CASE
+                WHEN stk.TinhTrang = 1 THEN 'Đang Mở'
+                ELSE 'Đã Đóng'
+            END AS 'Tình Trạng'
+        FROM 
+            SoTietKiem stk
+        JOIN 
+            KhachHang kh ON stk.MaKH = kh.MaKH
+        JOIN 
+            LoaiKyHan lk ON stk.MaKyHan = lk.MaKyHan
+        WHERE 
+            (@SearchField = '' OR 
+            (@SearchField = 'Mã Sổ' AND stk.MaSo LIKE @SearchKeyword) OR
+            (@SearchField = 'Tên Khách Hàng' AND kh.TenKH LIKE @SearchKeyword) OR
+            (@SearchField = 'CMND/CCCD' AND kh.[CMND/CCCD] LIKE @SearchKeyword) OR
+            (@SearchField = 'Địa Chỉ' AND kh.DiaChi LIKE @SearchKeyword))";
 
             try
             {
@@ -137,6 +141,7 @@ namespace BankManagement
                 DatabaseManager.Instance.CloseConnection();
             }
         }
+
 
         private void PassbookManagementForm_Load(object sender, EventArgs e)
         {
