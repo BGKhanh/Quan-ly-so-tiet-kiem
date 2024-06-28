@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SQLite;
+using System.IO;
 
 public class DatabaseManager
 {
@@ -8,8 +9,22 @@ public class DatabaseManager
     private SQLiteConnection connection;
     private string connectionString = "Data Source=DATA.db;Version=3;";
 
-    private DatabaseManager()
+    DatabaseManager()
     {
+        // Đường dẫn tới tệp DATA.db trong thư mục dự án
+        string projectDbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\DATA.db");
+
+        // Đường dẫn tới tệp DATA.db trong thư mục chạy hiện tại (bin\Debug hoặc bin\Release)
+        string executableDbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DATA.db");
+
+        // Nếu tệp không tồn tại trong thư mục chạy hiện tại, sao chép từ thư mục dự án
+        if (!File.Exists(executableDbPath) && File.Exists(projectDbPath))
+        {
+            File.Copy(projectDbPath, executableDbPath, true);
+        }
+
+        // Sử dụng tệp DATA.db trong thư mục chạy hiện tại
+        connectionString = $"Data Source={executableDbPath};Version=3;";
         connection = new SQLiteConnection(connectionString);
     }
 

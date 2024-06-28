@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Data.SQLite;
 using System.IO;
 using System.Windows.Forms;
+using System.Data.SQLite;
 
 namespace BankManagement
 {
     public partial class AddCustomerForm : Form
     {
-        private string connectionString = "Data Source=DATA.db;Version=3;";
-
         public AddCustomerForm()
         {
             InitializeComponent();
@@ -24,16 +22,22 @@ namespace BankManagement
         private string GetNewCustomerCode()
         {
             string newCode = "1";
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                conn.Open();
+                DatabaseManager.Instance.OpenConnection();
                 string query = "SELECT MAX(CAST(SUBSTR(MaKH, 3) AS INTEGER)) + 1 FROM KhachHang";
-                SQLiteCommand cmd = new SQLiteCommand(query, conn);
-                var result = cmd.ExecuteScalar();
-                if (result != DBNull.Value)
+                using (var cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                 {
-                    newCode = result.ToString();
+                    var result = cmd.ExecuteScalar();
+                    if (result != DBNull.Value)
+                    {
+                        newCode = result.ToString();
+                    }
                 }
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
             return newCode;
         }
@@ -64,18 +68,24 @@ namespace BankManagement
                 return;
             }
 
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                conn.Open();
+                DatabaseManager.Instance.OpenConnection();
                 string query = "INSERT INTO KhachHang (MaKH, TenKH, \"CMND/CCCD\", SDT, GioiTinh, DiaChi) VALUES (@MaKH, @TenKH, @CMND, @SDT, @GioiTinh, @DiaChi)";
-                SQLiteCommand cmd = new SQLiteCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaKH", lblCustomerCode.Text);
-                cmd.Parameters.AddWithValue("@TenKH", customerName);
-                cmd.Parameters.AddWithValue("@CMND", cmnd);
-                cmd.Parameters.AddWithValue("@SDT", sdt);
-                cmd.Parameters.AddWithValue("@GioiTinh", gioiTinh);
-                cmd.Parameters.AddWithValue("@DiaChi", diaChi);
-                cmd.ExecuteNonQuery();
+                using (var cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
+                {
+                    cmd.Parameters.AddWithValue("@MaKH", lblCustomerCode.Text);
+                    cmd.Parameters.AddWithValue("@TenKH", customerName);
+                    cmd.Parameters.AddWithValue("@CMND", cmnd);
+                    cmd.Parameters.AddWithValue("@SDT", sdt);
+                    cmd.Parameters.AddWithValue("@GioiTinh", gioiTinh);
+                    cmd.Parameters.AddWithValue("@DiaChi", diaChi);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
 
             MessageBox.Show("Đăng ký khách hàng thành công.");
@@ -84,14 +94,20 @@ namespace BankManagement
 
         private bool IsCustomerExist(string cmnd)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                conn.Open();
+                DatabaseManager.Instance.OpenConnection();
                 string query = "SELECT COUNT(*) FROM KhachHang WHERE \"CMND/CCCD\" = @CMND";
-                SQLiteCommand cmd = new SQLiteCommand(query, conn);
-                cmd.Parameters.AddWithValue("@CMND", cmnd);
-                int count = Convert.ToInt32(cmd.ExecuteScalar());
-                return count > 0;
+                using (var cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
+                {
+                    cmd.Parameters.AddWithValue("@CMND", cmnd);
+                    int count = Convert.ToInt32(cmd.ExecuteScalar());
+                    return count > 0;
+                }
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
         }
 

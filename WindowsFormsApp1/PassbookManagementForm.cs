@@ -8,7 +8,6 @@ namespace BankManagement
     public partial class PassbookManagementForm : Form
     {
         private string username;
-        private string connectionString = "Data Source=DATA.db;Version=3;";
 
         public PassbookManagementForm(string username)
         {
@@ -47,15 +46,23 @@ namespace BankManagement
                 var confirmResult = MessageBox.Show("Bạn có chắc chắn muốn xóa sổ tiết kiệm này?", "Xác nhận xóa", MessageBoxButtons.YesNo);
                 if (confirmResult == DialogResult.Yes)
                 {
-                    using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                    try
                     {
-                        connection.Open();
+                        DatabaseManager.Instance.OpenConnection();
                         string deleteQuery = "DELETE FROM SoTietKiem WHERE MaSo = @MaSo";
-                        using (SQLiteCommand command = new SQLiteCommand(deleteQuery, connection))
+                        using (SQLiteCommand command = new SQLiteCommand(deleteQuery, DatabaseManager.Instance.GetConnection()))
                         {
                             command.Parameters.AddWithValue("@MaSo", accountId);
                             command.ExecuteNonQuery();
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi: " + ex.Message);
+                    }
+                    finally
+                    {
+                        DatabaseManager.Instance.CloseConnection();
                     }
 
                     LoadSavingAccounts();
@@ -83,35 +90,36 @@ namespace BankManagement
 
         private void LoadSavingAccounts(string searchKeyword = "", string searchField = "")
         {
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
-            {
-                string query = @"
-                    SELECT 
-                        stk.MaSo AS 'Mã Sổ', 
-                        lk.TenKyHan AS 'Loại Tiết Kiệm', 
-                        kh.TenKH AS 'Tên Khách Hàng', 
-                        kh.[CMND/CCCD] AS 'CMND/CCCD',
-                        kh.DiaChi AS 'Địa Chỉ',
-                        stk.NgayLapSo AS 'Ngày Mở Sổ', 
-                        stk.SoDu AS 'Số Tiền Gửi',
-                        CASE
-                            WHEN stk.SoDu = 0 THEN 'Đóng'
-                            ELSE 'Đang Mở'
-                        END AS 'Tình Trạng'
-                    FROM 
-                        SoTietKiem stk
-                    JOIN 
-                        KhachHang kh ON stk.MaKH = kh.MaKH
-                    JOIN 
-                        LoaiKyHan lk ON stk.MaKyHan = lk.MaKyHan
-                    WHERE 
-                        (@SearchField = '' OR 
-                        (@SearchField = 'Mã Sổ' AND stk.MaSo LIKE @SearchKeyword) OR
-                        (@SearchField = 'Tên Khách Hàng' AND kh.TenKH LIKE @SearchKeyword) OR
-                        (@SearchField = 'CMND/CCCD' AND kh.[CMND/CCCD] LIKE @SearchKeyword) OR
-                        (@SearchField = 'Địa Chỉ' AND kh.DiaChi LIKE @SearchKeyword))";
+            string query = @"
+                SELECT 
+                    stk.MaSo AS 'Mã Sổ', 
+                    lk.TenKyHan AS 'Loại Tiết Kiệm', 
+                    kh.TenKH AS 'Tên Khách Hàng', 
+                    kh.[CMND/CCCD] AS 'CMND/CCCD',
+                    kh.DiaChi AS 'Địa Chỉ',
+                    stk.NgayLapSo AS 'Ngày Mở Sổ', 
+                    stk.SoDu AS 'Số Tiền Gửi',
+                    CASE
+                        WHEN stk.SoDu = 0 THEN 'Đóng'
+                        ELSE 'Đang Mở'
+                    END AS 'Tình Trạng'
+                FROM 
+                    SoTietKiem stk
+                JOIN 
+                    KhachHang kh ON stk.MaKH = kh.MaKH
+                JOIN 
+                    LoaiKyHan lk ON stk.MaKyHan = lk.MaKyHan
+                WHERE 
+                    (@SearchField = '' OR 
+                    (@SearchField = 'Mã Sổ' AND stk.MaSo LIKE @SearchKeyword) OR
+                    (@SearchField = 'Tên Khách Hàng' AND kh.TenKH LIKE @SearchKeyword) OR
+                    (@SearchField = 'CMND/CCCD' AND kh.[CMND/CCCD] LIKE @SearchKeyword) OR
+                    (@SearchField = 'Địa Chỉ' AND kh.DiaChi LIKE @SearchKeyword))";
 
-                SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(query, connection);
+            try
+            {
+                DatabaseManager.Instance.OpenConnection();
+                SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(query, DatabaseManager.Instance.GetConnection());
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@SearchField", searchField);
                 dataAdapter.SelectCommand.Parameters.AddWithValue("@SearchKeyword", "%" + searchKeyword + "%");
 
@@ -119,6 +127,14 @@ namespace BankManagement
                 dataAdapter.Fill(dataTable);
 
                 dgvSavingAccounts.DataSource = dataTable;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
         }
 

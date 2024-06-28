@@ -75,7 +75,7 @@ namespace BankManagement
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
-            MainForm mainForm = new MainForm(username); // Truyền username vào MainForm
+            MainForm mainForm = new MainForm(username);
             mainForm.Show();
         }
 
@@ -132,23 +132,30 @@ namespace BankManagement
 
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand(query, connection);
-                command.Parameters.AddWithValue("@MaKH", customerID);
-                connection.Open();
-                SQLiteDataReader reader = command.ExecuteReader();
+                try
+                {
+                    SQLiteCommand command = new SQLiteCommand(query, connection);
+                    command.Parameters.AddWithValue("@MaKH", customerID);
+                    connection.Open();
+                    SQLiteDataReader reader = command.ExecuteReader();
 
-                if (reader.Read())
-                {
-                    txtCustomerName.Text = reader["TenKH"].ToString();
-                    txtIDCard.Text = reader["CMND/CCCD"].ToString();
-                    LoadPassbookIDs(customerID);
+                    if (reader.Read())
+                    {
+                        txtCustomerName.Text = reader["TenKH"].ToString();
+                        txtIDCard.Text = reader["CMND/CCCD"].ToString();
+                        LoadPassbookIDs(customerID);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Mã khách hàng không hợp lệ.");
+                        txtCustomerName.Text = string.Empty;
+                        txtIDCard.Text = string.Empty;
+                        cbPassbookID.Items.Clear();
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Mã khách hàng không hợp lệ.");
-                    txtCustomerName.Text = string.Empty;
-                    txtIDCard.Text = string.Empty;
-                    cbPassbookID.Items.Clear();
+                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -159,21 +166,28 @@ namespace BankManagement
 
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand(query, connection);
-                command.Parameters.AddWithValue("@MaKH", customerID);
-                connection.Open();
-                SQLiteDataReader reader = command.ExecuteReader();
-
-                cbPassbookID.Items.Clear();
-                while (reader.Read())
+                try
                 {
-                    cbPassbookID.Items.Add(reader["MaSo"].ToString());
+                    SQLiteCommand command = new SQLiteCommand(query, connection);
+                    command.Parameters.AddWithValue("@MaKH", customerID);
+                    connection.Open();
+                    SQLiteDataReader reader = command.ExecuteReader();
+
+                    cbPassbookID.Items.Clear();
+                    while (reader.Read())
+                    {
+                        cbPassbookID.Items.Add(reader["MaSo"].ToString());
+                    }
+
+                    if (cbPassbookID.Items.Count > 0)
+                    {
+                        cbPassbookID.SelectedIndex = 0;
+                        LoadPassbookDetails(cbPassbookID.SelectedItem.ToString());
+                    }
                 }
-
-                if (cbPassbookID.Items.Count > 0)
+                catch (Exception ex)
                 {
-                    cbPassbookID.SelectedIndex = 0;
-                    LoadPassbookDetails(cbPassbookID.SelectedItem.ToString());
+                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -201,17 +215,24 @@ namespace BankManagement
 
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand(query, connection);
-                command.Parameters.AddWithValue("@MaSo", passbookID);
-                command.Parameters.AddWithValue("@Today", DateTime.Now.ToString("yyyy-MM-dd"));
-                connection.Open();
-                SQLiteDataReader reader = command.ExecuteReader();
-
-                if (reader.Read())
+                try
                 {
-                    txtPassbookType.Text = reader["MaKyHan"].ToString();
-                    txtRemainingTime.Text = reader["ThoiGianConLai"].ToString() + " ngày";
-                    txtBalance.Text = reader["SoDu"].ToString() + " VND";
+                    SQLiteCommand command = new SQLiteCommand(query, connection);
+                    command.Parameters.AddWithValue("@MaSo", passbookID);
+                    command.Parameters.AddWithValue("@Today", DateTime.Now.ToString("yyyy-MM-dd"));
+                    connection.Open();
+                    SQLiteDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        txtPassbookType.Text = reader["MaKyHan"].ToString();
+                        txtRemainingTime.Text = reader["ThoiGianConLai"].ToString() + " ngày";
+                        txtBalance.Text = reader["SoDu"].ToString() + " VND";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

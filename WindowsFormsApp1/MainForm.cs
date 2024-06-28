@@ -1,41 +1,48 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Data.SQLite;
-using System.IO;
+using System.Windows.Forms;
 
 namespace BankManagement
 {
     public partial class MainForm : Form
     {
         private string _username;
-        private string connectionString;
 
         public MainForm(string username)
         {
             InitializeComponent();
-            string databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DATA.db");
-            connectionString = $"Data Source={databasePath};Version=3;";
             _username = username;
             string employeeName = GetEmployeeName(_username);
             lblWelcome.Text += employeeName;
-            
         }
+
         private string GetEmployeeName(string employeeCode)
         {
             string employeeName = string.Empty;
 
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                conn.Open();
+                DatabaseManager.Instance.OpenConnection();
                 string query = "SELECT TenNV FROM NhanVien WHERE MaNV = @EmployeeCode";
-                SQLiteCommand cmd = new SQLiteCommand(query, conn);
-                cmd.Parameters.AddWithValue("@EmployeeCode", employeeCode);
-
-                SQLiteDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
+                using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                 {
-                    employeeName = reader["TenNV"].ToString();
+                    cmd.Parameters.AddWithValue("@EmployeeCode", employeeCode);
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            employeeName = reader["TenNV"].ToString();
+                        }
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi lấy tên nhân viên: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
 
             return employeeName;

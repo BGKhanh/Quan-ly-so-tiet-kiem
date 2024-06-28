@@ -8,7 +8,6 @@ namespace BankManagement
     public partial class ReportForm : Form
     {
         string username;
-        private string connectionString = "Data Source=DATA.db;Version=3;";
 
         public ReportForm(string username)
         {
@@ -145,13 +144,24 @@ namespace BankManagement
 
             query += " GROUP BY LoaiKyHan.TenKyHan";
 
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                SQLiteCommand cmd = new SQLiteCommand(query, conn);
-                SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-                dgvSalesReport.DataSource = dt;
+                DatabaseManager.Instance.OpenConnection();
+                using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
+                {
+                    SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    dgvSalesReport.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi xảy ra khi tải báo cáo doanh thu: " + ex.Message);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
         }
 
@@ -168,8 +178,8 @@ namespace BankManagement
                            "(SUM(CASE WHEN GiaoDich.LoaiGiaoDich = 'Goi' THEN 1 ELSE 0 END) - SUM(CASE WHEN GiaoDich.LoaiGiaoDich = 'Rut' THEN 1 ELSE 0 END)) AS ChenhLech " +
                            "FROM GiaoDich " +
                            "JOIN SoTietKiem ON GiaoDich.MaSo = SoTietKiem.MaSo ";
-            string whereClause = GetWhereClause(periodType, periodValue);
 
+            string whereClause = GetWhereClause(periodType, periodValue);
             if (!string.IsNullOrEmpty(whereClause))
             {
                 query += " WHERE " + whereClause;
@@ -177,14 +187,25 @@ namespace BankManagement
 
             query += " GROUP BY NgayThangQuyNam";
 
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                SQLiteCommand cmd = new SQLiteCommand(query, conn);
-                cmd.Parameters.AddWithValue("@periodType", periodType);
-                SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-                dgvSavingsReport.DataSource = dt;
+                DatabaseManager.Instance.OpenConnection();
+                using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
+                {
+                    cmd.Parameters.AddWithValue("@periodType", periodType);
+                    SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    dgvSavingsReport.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi xảy ra khi tải báo cáo tiết kiệm: " + ex.Message);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
         }
 

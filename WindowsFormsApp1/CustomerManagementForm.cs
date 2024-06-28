@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
-using System.IO;
 using System.Windows.Forms;
 
 namespace BankManagement
 {
     public partial class CustomerManagementForm : Form
     {
-        private string databaseFile = "DATA.db";
-        private string databasePath;
-        private string connectionString;
         private string username;
         private bool isEditMode = false;
 
@@ -18,9 +14,6 @@ namespace BankManagement
         {
             InitializeComponent();
             this.username = username;
-
-            databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseFile);
-            connectionString = $"Data Source={databasePath};Version=3;";
         }
 
         private void btnBackToMain_Click(object sender, EventArgs e)
@@ -37,14 +30,20 @@ namespace BankManagement
 
         private void LoadCustomerData()
         {
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                conn.Open();
+                DatabaseManager.Instance.OpenConnection();
                 string query = "SELECT MaKH, TenKH, \"CMND/CCCD\", SDT, GioiTinh, DiaChi FROM KhachHang";
-                SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                dataGridView1.DataSource = dt;
+                using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, DatabaseManager.Instance.GetConnection()))
+                {
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dataGridView1.DataSource = dt;
+                }
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
         }
 
@@ -102,11 +101,11 @@ namespace BankManagement
             string gioiTinh = detailsDataGridView.Rows[4].Cells["Value"].Value.ToString();
             string diaChi = detailsDataGridView.Rows[5].Cells["Value"].Value.ToString();
 
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                conn.Open();
+                DatabaseManager.Instance.OpenConnection();
                 string query = "UPDATE KhachHang SET TenKH = @TenKH, \"CMND/CCCD\" = @CMND, SDT = @SDT, GioiTinh = @GioiTinh, DiaChi = @DiaChi WHERE MaKH = @MaKH";
-                using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+                using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                 {
                     cmd.Parameters.AddWithValue("@MaKH", maKH);
                     cmd.Parameters.AddWithValue("@TenKH", tenKH);
@@ -117,6 +116,11 @@ namespace BankManagement
                     cmd.ExecuteNonQuery();
                 }
             }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
+            }
+
             LoadCustomerData();
             MessageBox.Show("Thông tin khách hàng đã được cập nhật.");
         }
@@ -135,15 +139,12 @@ namespace BankManagement
                     {
                         try
                         {
-                            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+                            DatabaseManager.Instance.OpenConnection();
+                            string query = "DELETE FROM khachhang WHERE MaKH = @MaKH";
+                            using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                             {
-                                conn.Open();
-                                string query = "DELETE FROM khachhang WHERE MaKH = @MaKH";
-                                using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
-                                {
-                                    cmd.Parameters.AddWithValue("@MaKH", customerID);
-                                    cmd.ExecuteNonQuery();
-                                }
+                                cmd.Parameters.AddWithValue("@MaKH", customerID);
+                                cmd.ExecuteNonQuery();
                             }
                             success = true;
                             LoadCustomerData();
@@ -154,6 +155,10 @@ namespace BankManagement
                         {
                             attempts++;
                             System.Threading.Thread.Sleep(500);
+                        }
+                        finally
+                        {
+                            DatabaseManager.Instance.CloseConnection();
                         }
                     }
                     if (!success)
@@ -179,17 +184,21 @@ namespace BankManagement
                 return;
             }
 
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                conn.Open();
+                DatabaseManager.Instance.OpenConnection();
                 string query = $"SELECT MaKH, TenKH, \"CMND/CCCD\", SDT, GioiTinh, DiaChi FROM KhachHang WHERE {searchField} LIKE @SearchValue";
-                using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn))
+                using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, DatabaseManager.Instance.GetConnection()))
                 {
                     da.SelectCommand.Parameters.AddWithValue("@SearchValue", "%" + searchValue + "%");
                     DataTable dt = new DataTable();
                     da.Fill(dt);
                     dataGridView1.DataSource = dt;
                 }
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
         }
 

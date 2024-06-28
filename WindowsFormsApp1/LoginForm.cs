@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 
 namespace BankManagement
 {
     public partial class LoginForm : Form
     {
-        private string connectionString;
         private bool isFullscreen = false;
         private Rectangle previousBounds;
         private Font previousFont;
@@ -17,8 +15,6 @@ namespace BankManagement
         public LoginForm()
         {
             InitializeComponent();
-            string databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DATA.db");
-            connectionString = $"Data Source={databasePath};Version=3;";
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -47,46 +43,43 @@ namespace BankManagement
 
         private bool IsLoginValid(string username, string password)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                conn.Open();
-                try
+                DatabaseManager.Instance.OpenConnection();
+                string query = @"
+                    SELECT MaNV, MatKhau
+                    FROM NhanVien
+                    WHERE MaNV = @Username AND MatKhau = @Password";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                 {
-                    string query = @"
-                        SELECT MaNV, MatKhau
-                        FROM NhanVien
-                        WHERE MaNV = @Username AND MatKhau = @Password";
+                    cmd.Parameters.AddWithValue("@Username", username);
+                    cmd.Parameters.AddWithValue("@Password", password);
 
-                    using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue("@Username", username);
-                        cmd.Parameters.AddWithValue("@Password", password);
-
-                        using (SQLiteDataReader reader = cmd.ExecuteReader())
+                        if (reader.Read())
                         {
-                            if (reader.Read())
-                            {
-                                // Đọc dữ liệu từ cơ sở dữ liệu nếu tìm thấy tài khoản
-                                string dbUsername = reader["MaNV"].ToString();
-                                string dbPassword = reader["MatKhau"].ToString();
+                            // Đọc dữ liệu từ cơ sở dữ liệu nếu tìm thấy tài khoản
+                            string dbUsername = reader["MaNV"].ToString();
+                            string dbPassword = reader["MatKhau"].ToString();
 
-                                // Kiểm tra xem tài khoản và mật khẩu có khớp hay không
-                                if (dbUsername == username && dbPassword == password)
-                                {
-                                    return true;
-                                }
+                            // Kiểm tra xem tài khoản và mật khẩu có khớp hay không
+                            if (dbUsername == username && dbPassword == password)
+                            {
+                                return true;
                             }
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Lỗi khi kiểm tra đăng nhập: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    conn.Close();
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi kiểm tra đăng nhập: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
             return false;
         }

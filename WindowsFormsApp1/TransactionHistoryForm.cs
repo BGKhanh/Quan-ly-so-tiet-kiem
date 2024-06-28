@@ -38,12 +38,19 @@ namespace BankManagement
         {
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
-                conn.Open();
-                string query = "SELECT MaGD, LoaiGiaoDich, MaKH, MaSo, MaNV, NgayGiaoDich, SoTien FROM GiaoDich";
-                SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                dataGridView1.DataSource = dt;
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT MaGD, LoaiGiaoDich, MaKH, MaSo, MaNV, NgayGiaoDich, SoTien FROM GiaoDich";
+                    SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dataGridView1.DataSource = dt;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -60,25 +67,32 @@ namespace BankManagement
         {
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
-                conn.Open();
-                string query = $@"SELECT 
-                                    G.MaGD, G.LoaiGiaoDich, G.NgayGiaoDich, G.SoTien,
-                                    KH.MaKH, KH.TenKH, KH.[CMND/CCCD], KH.SDT, KH.GioiTinh, KH.DiaChi,
-                                    NV.MaNV, NV.TenNV, NV.ChucVu,
-                                    STK.MaSo, STK.SoDu, STK.NgayLapSo,
-                                    LK.MaKyHan, LK.TenKyHan, LK.LaiSuat, LK.ThoiGianGoiToiThieu
-                                FROM GiaoDich G
-                                JOIN KhachHang KH ON G.MaKH = KH.MaKH
-                                JOIN NhanVien NV ON G.MaNV = NV.MaNV
-                                JOIN SoTietKiem STK ON G.MaSo = STK.MaSo
-                                JOIN LoaiKyHan LK ON STK.MaKyHan = LK.MaKyHan
-                                WHERE G.MaGD = @TransactionID";
-                SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
-                da.SelectCommand.Parameters.AddWithValue("@TransactionID", transactionID);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                detailsDataGridView.DataSource = dt;
-                detailsPanel.Visible = true;
+                try
+                {
+                    conn.Open();
+                    string query = $@"SELECT 
+                                        G.MaGD, G.LoaiGiaoDich, G.NgayGiaoDich, G.SoTien,
+                                        KH.MaKH, KH.TenKH, KH.[CMND/CCCD], KH.SDT, KH.GioiTinh, KH.DiaChi,
+                                        NV.MaNV, NV.TenNV, NV.ChucVu,
+                                        STK.MaSo, STK.SoDu, STK.NgayLapSo,
+                                        LK.MaKyHan, LK.TenKyHan, LK.LaiSuat, LK.ThoiGianGoiToiThieu
+                                    FROM GiaoDich G
+                                    JOIN KhachHang KH ON G.MaKH = KH.MaKH
+                                    JOIN NhanVien NV ON G.MaNV = NV.MaNV
+                                    JOIN SoTietKiem STK ON G.MaSo = STK.MaSo
+                                    JOIN LoaiKyHan LK ON STK.MaKyHan = LK.MaKyHan
+                                    WHERE G.MaGD = @TransactionID";
+                    SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
+                    da.SelectCommand.Parameters.AddWithValue("@TransactionID", transactionID);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    detailsDataGridView.DataSource = dt;
+                    detailsPanel.Visible = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -95,17 +109,24 @@ namespace BankManagement
 
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
-                conn.Open();
-                string query = $@"SELECT 
-                                    MaGD, LoaiGiaoDich, MaKH, MaSo, MaNV, NgayGiaoDich, SoTien
-                                FROM GiaoDich
-                                WHERE {searchField} LIKE @SearchValue";
-                using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn))
+                try
                 {
-                    da.SelectCommand.Parameters.AddWithValue("@SearchValue", "%" + searchValue + "%");
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dataGridView1.DataSource = dt;
+                    conn.Open();
+                    string query = $@"SELECT 
+                                        MaGD, LoaiGiaoDich, MaKH, MaSo, MaNV, NgayGiaoDich, SoTien
+                                    FROM GiaoDich
+                                    WHERE {searchField} LIKE @SearchValue";
+                    using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn))
+                    {
+                        da.SelectCommand.Parameters.AddWithValue("@SearchValue", "%" + searchValue + "%");
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        dataGridView1.DataSource = dt;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

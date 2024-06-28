@@ -6,8 +6,6 @@ namespace BankManagement
 {
     public partial class OpenNewPassbookForm : Form
     {
-        private string connectionString = "Data Source=DATA.db;Version=3;";
-
         public OpenNewPassbookForm()
         {
             InitializeComponent();
@@ -24,15 +22,25 @@ namespace BankManagement
             int lastPassbookID = 0;
             string query = "SELECT MAX(CAST(SUBSTR(MaSo, 4) AS INTEGER)) FROM SoTietKiem";
 
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            try
             {
-                SQLiteCommand command = new SQLiteCommand(query, connection);
-                connection.Open();
-                var result = command.ExecuteScalar();
-                if (result != DBNull.Value)
+                DatabaseManager.Instance.OpenConnection();
+                using (SQLiteCommand command = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                 {
-                    lastPassbookID = Convert.ToInt32(result);
+                    var result = command.ExecuteScalar();
+                    if (result != DBNull.Value)
+                    {
+                        lastPassbookID = Convert.ToInt32(result);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
 
             return lastPassbookID + 1;
@@ -66,17 +74,27 @@ namespace BankManagement
         {
             string query = "INSERT INTO SoTietKiem (MaSo, MaKH, MaKyHan, SoDu, NgayLapSo) VALUES (@MaSo, @MaKH, @MaKyHan, @SoDu, @NgayLapSo)";
 
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            try
             {
-                SQLiteCommand command = new SQLiteCommand(query, connection);
-                command.Parameters.AddWithValue("@MaSo", passbookID);
-                command.Parameters.AddWithValue("@MaKH", customerID);
-                command.Parameters.AddWithValue("@MaKyHan", passbookType);
-                command.Parameters.AddWithValue("@SoDu", initialDeposit);
-                command.Parameters.AddWithValue("@NgayLapSo", openDate.ToString("yyyy-MM-dd"));
+                DatabaseManager.Instance.OpenConnection();
+                using (SQLiteCommand command = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
+                {
+                    command.Parameters.AddWithValue("@MaSo", passbookID);
+                    command.Parameters.AddWithValue("@MaKH", customerID);
+                    command.Parameters.AddWithValue("@MaKyHan", passbookType);
+                    command.Parameters.AddWithValue("@SoDu", initialDeposit);
+                    command.Parameters.AddWithValue("@NgayLapSo", openDate.ToString("yyyy-MM-dd"));
 
-                connection.Open();
-                command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
         }
 
@@ -97,26 +115,36 @@ namespace BankManagement
 
             string query = "SELECT TenKH, \"CMND/CCCD\", DiaChi FROM KhachHang WHERE MaKH = @MaKH";
 
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            try
             {
-                SQLiteCommand command = new SQLiteCommand(query, connection);
-                command.Parameters.AddWithValue("@MaKH", customerID);
-                connection.Open();
-                SQLiteDataReader reader = command.ExecuteReader();
+                DatabaseManager.Instance.OpenConnection();
+                using (SQLiteCommand command = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
+                {
+                    command.Parameters.AddWithValue("@MaKH", customerID);
+                    SQLiteDataReader reader = command.ExecuteReader();
 
-                if (reader.Read())
-                {
-                    txtCustomerName.Text = reader["TenKH"].ToString();
-                    txtIDCard.Text = reader["CMND/CCCD"].ToString();
-                    txtAddress.Text = reader["DiaChi"].ToString();
+                    if (reader.Read())
+                    {
+                        txtCustomerName.Text = reader["TenKH"].ToString();
+                        txtIDCard.Text = reader["CMND/CCCD"].ToString();
+                        txtAddress.Text = reader["DiaChi"].ToString();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Mã khách hàng không hợp lệ.");
+                        txtCustomerName.Text = string.Empty;
+                        txtIDCard.Text = string.Empty;
+                        txtAddress.Text = string.Empty;
+                    }
                 }
-                else
-                {
-                    MessageBox.Show("Mã khách hàng không hợp lệ.");
-                    txtCustomerName.Text = string.Empty;
-                    txtIDCard.Text = string.Empty;
-                    txtAddress.Text = string.Empty;
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
         }
     }

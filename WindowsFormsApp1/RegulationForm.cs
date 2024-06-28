@@ -17,33 +17,33 @@ namespace BankManagement
             dt.Columns.Add("Lãi Suất");
             dt.Columns.Add("Thời Gian Gửi Tối Thiểu");
 
-            string connectionString = "Data Source=DATA.db;Version=3;";
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                try
+                DatabaseManager.Instance.OpenConnection();
+                string query = "SELECT * FROM LoaiKyHan";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                 {
-                    conn.Open();
-                    string query = "SELECT * FROM LoaiKyHan";
-                    using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
-                        using (SQLiteDataReader reader = cmd.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                DataRow row = dt.NewRow();
-                                row["Mã Kỳ Hạn"] = reader["MaKyHan"].ToString();
-                                row["Tên Kỳ Hạn"] = reader["TenKyHan"].ToString();
-                                row["Lãi Suất"] = reader["LaiSuat"].ToString();
-                                row["Thời Gian Gửi Tối Thiểu"] = reader["ThoiGianGoiToiThieu"].ToString();
-                                dt.Rows.Add(row);
-                            }
+                            DataRow row = dt.NewRow();
+                            row["Mã Kỳ Hạn"] = reader["MaKyHan"].ToString();
+                            row["Tên Kỳ Hạn"] = reader["TenKyHan"].ToString();
+                            row["Lãi Suất"] = reader["LaiSuat"].ToString();
+                            row["Thời Gian Gửi Tối Thiểu"] = reader["ThoiGianGoiToiThieu"].ToString();
+                            dt.Rows.Add(row);
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Có lỗi xảy ra khi tải dữ liệu: " + ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi xảy ra khi tải dữ liệu: " + ex.Message);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
 
             dgvRegulations.DataSource = dt;
@@ -52,32 +52,31 @@ namespace BankManagement
         private string GetNextTermID()
         {
             string nextID = "KH001";
-            string connectionString = "Data Source=DATA.db;Version=3;";
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                try
+                DatabaseManager.Instance.OpenConnection();
+                string query = "SELECT MaKyHan FROM LoaiKyHan ORDER BY MaKyHan DESC LIMIT 1";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                 {
-                    conn.Open();
-                    string query = "SELECT MaKyHan FROM LoaiKyHan ORDER BY MaKyHan DESC LIMIT 1";
-                    using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
                     {
-                        object result = cmd.ExecuteScalar();
-                        if (result != null)
-                        {
-                            string lastID = result.ToString();
-                            int idNumber = int.Parse(lastID.Substring(2)) + 1;
-                            nextID = "KH" + idNumber.ToString("D3");
-                        }
+                        string lastID = result.ToString();
+                        int idNumber = int.Parse(lastID.Substring(2)) + 1;
+                        nextID = "KH" + idNumber.ToString("D3");
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Có lỗi xảy ra khi lấy mã kỳ hạn mới: " + ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi xảy ra khi lấy mã kỳ hạn mới: " + ex.Message);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
             return nextID;
         }
-
 
         private void btnBackToMain_Click(object sender, EventArgs e)
         {
@@ -160,24 +159,24 @@ namespace BankManagement
                 return;
             }
 
-            string connectionString = "Data Source=DATA.db;Version=3;";
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                try
+                DatabaseManager.Instance.OpenConnection();
+                string query = "DELETE FROM LoaiKyHan WHERE MaKyHan = @MaKyHan";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                 {
-                    conn.Open();
-                    string query = "DELETE FROM LoaiKyHan WHERE MaKyHan = @MaKyHan";
-                    using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@MaKyHan", termID);
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.Parameters.AddWithValue("@MaKyHan", termID);
+                    cmd.ExecuteNonQuery();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Có lỗi xảy ra khi xóa dữ liệu: " + ex.Message);
-                    return;
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi xảy ra khi xóa dữ liệu: " + ex.Message);
+                return;
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
 
             LoadCurrentRegulations();
@@ -206,6 +205,5 @@ namespace BankManagement
             mainForm.Show();
             SetFieldsReadOnly(true);
         }
-
     }
 }

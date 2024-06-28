@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Data;
-using System.Data.SQLite; // Sử dụng thư viện SQLite
+using System.Data.SQLite;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace BankManagement
 {
     public partial class frmDangKyNV : Form
     {
-        private string connectionString = "Data Source=DATA.db;Version=3;";
         private string username;
 
         public frmDangKyNV(string username)
@@ -34,13 +32,12 @@ namespace BankManagement
                 string diaChi = txtDiaChi.Text;
                 string matKhau = txtMK.Text;
 
-                using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+                try
                 {
-                    try
+                    DatabaseManager.Instance.OpenConnection();
+                    string query = "INSERT INTO NhanVien (MaNV, TenNV, ChucVu, SDT, GioiTinh, DiaChi, MatKhau) VALUES (@MaNV, @TenNV, @ChucVu, @SDT, @GioiTinh, @DiaChi, @MatKhau)";
+                    using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                     {
-                        conn.Open();
-                        string query = "INSERT INTO NhanVien (MaNV, TenNV, ChucVu, SDT, GioiTinh, DiaChi, MatKhau) VALUES (@MaNV, @TenNV, @ChucVu, @SDT, @GioiTinh, @DiaChi, @MatKhau)";
-                        SQLiteCommand cmd = new SQLiteCommand(query, conn);
                         cmd.Parameters.AddWithValue("@MaNV", maNV);
                         cmd.Parameters.AddWithValue("@TenNV", tenNV);
                         cmd.Parameters.AddWithValue("@ChucVu", chucVu);
@@ -55,10 +52,14 @@ namespace BankManagement
                         // Refresh DataGridView
                         LoadEmployeeData();
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Lỗi: " + ex.Message);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi: " + ex.Message);
+                }
+                finally
+                {
+                    DatabaseManager.Instance.CloseConnection();
                 }
             }
         }
@@ -172,27 +173,30 @@ namespace BankManagement
 
         private void LoadEmployeeData()
         {
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                try
+                DatabaseManager.Instance.OpenConnection();
+                string query = "SELECT * FROM NhanVien";
+                using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, DatabaseManager.Instance.GetConnection()))
                 {
-                    conn.Open();
-                    string query = "SELECT * FROM NhanVien";
-                    SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
                     dataGridViewDSNV.DataSource = dt;
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Lỗi: " + ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
             }
         }
 
         private void frmDangKyNV_Load_1(object sender, EventArgs e)
         {
-
+            // Any additional logic for form load can be added here
         }
     }
 }
