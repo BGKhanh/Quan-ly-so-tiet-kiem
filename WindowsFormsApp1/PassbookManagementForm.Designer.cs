@@ -69,7 +69,7 @@ namespace BankManagement
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(748, 15);
+            this.btnSearch.Location = new System.Drawing.Point(786, 15);
             this.btnSearch.Margin = new System.Windows.Forms.Padding(4);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(100, 28);
@@ -83,7 +83,7 @@ namespace BankManagement
             this.txtSearch.Location = new System.Drawing.Point(554, 17);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(4);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(185, 22);
+            this.txtSearch.Size = new System.Drawing.Size(224, 22);
             this.txtSearch.TabIndex = 4;
             // 
             // cmbSearchField
@@ -107,14 +107,14 @@ namespace BankManagement
             this.dgvSavingAccounts.Margin = new System.Windows.Forms.Padding(4);
             this.dgvSavingAccounts.Name = "dgvSavingAccounts";
             this.dgvSavingAccounts.RowHeadersWidth = 51;
-            this.dgvSavingAccounts.Size = new System.Drawing.Size(832, 369);
+            this.dgvSavingAccounts.Size = new System.Drawing.Size(870, 383);
             this.dgvSavingAccounts.TabIndex = 5;
             // 
             // PassbookManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(864, 444);
+            this.ClientSize = new System.Drawing.Size(899, 458);
             this.Controls.Add(this.cmbSearchField);
             this.Controls.Add(this.dgvSavingAccounts);
             this.Controls.Add(this.txtSearch);
@@ -129,6 +129,7 @@ namespace BankManagement
             ((System.ComponentModel.ISupportInitialize)(this.dgvSavingAccounts)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
     }
 }
