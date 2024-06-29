@@ -6,259 +6,160 @@ namespace BankManagement
 {
     public partial class TransactionForm : Form
     {
-        private DatabaseManager databaseManager = DatabaseManager.Instance;
-        private string username;
-
+        string username;
         public TransactionForm(string username)
         {
             InitializeComponent();
+            lblTransactionIDValue.Text = GenerateTransactionID();
+            lblTransactionDateValue.Text = DateTime.Now.ToString("yyyy-MM-dd");
             this.username = username;
         }
 
-        private void TransactionForm_Load(object sender, EventArgs e)
+        private string GenerateTransactionID()
         {
-            int newTransactionID = GetNextTransactionID();
-            lblTransactionIDValue.Text = newTransactionID.ToString();
+            return "GD" + DateTime.Now.ToString("yyyyMMdd");
         }
 
-        private int GetNextTransactionID()
+        private void txtCustomerID_Leave(object sender, EventArgs e)
         {
-            int lastTransactionID = 0;
-            string query = "SELECT MAX(CAST(SUBSTR(MaGD, 4) AS INTEGER)) FROM GiaoDich";
-            SQLiteDataReader reader = null;
-
             try
             {
-                reader = databaseManager.ExecuteQuery(query);
-                if (reader.Read() && !reader.IsDBNull(0))
+                string query = "SELECT TenKH, [CMND/CCCD] FROM KhachHang WHERE MaKH = @MaKH";
+                SQLiteParameter[] parameters = { new SQLiteParameter("@MaKH", txtCustomerID.Text.Trim()) };
+                using (SQLiteDataReader reader = DatabaseManager.Instance.ExecuteQuery(query, parameters))
                 {
-                    lastTransactionID = reader.GetInt32(0);
+                    if (reader.Read())
+                    {
+                        txtCustomerName.Text = reader["TenKH"].ToString();
+                        txtIDCard.Text = reader["CMND/CCCD"].ToString();
+                        LoadPassbookIDs(txtCustomerID.Text.Trim());
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không tìm thấy thông tin khách hàng", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
+        }
+
+        private void LoadPassbookIDs(string customerID)
+        {
+            try
             {
-                if (reader != null)
+                string query = "SELECT MaSo FROM SoTietKiem WHERE MaKH = @MaKH";
+                SQLiteParameter[] parameters = { new SQLiteParameter("@MaKH", customerID) };
+                using (SQLiteDataReader reader = DatabaseManager.Instance.ExecuteQuery(query, parameters))
                 {
-                    reader.Close();
+                    cbPassbookID.Items.Clear();
+                    while (reader.Read())
+                    {
+                        cbPassbookID.Items.Add(reader["MaSo"].ToString());
+                    }
+                    if (cbPassbookID.Items.Count > 0)
+                    {
+                        cbPassbookID.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        txtPassbookType.Text = string.Empty;
+                        txtRemainingTime.Text = string.Empty;
+                        txtBalance.Text = string.Empty;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
-            return lastTransactionID + 1;
+        private void cbPassbookID_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string query = "SELECT MaKyHan, JULIANDAY(NgayDongSo) - JULIANDAY('now') AS ThoiGianConLai, SoDu FROM SoTietKiem WHERE MaSo = @MaSo";
+                SQLiteParameter[] parameters = { new SQLiteParameter("@MaSo", cbPassbookID.SelectedItem.ToString()) };
+                using (SQLiteDataReader reader = DatabaseManager.Instance.ExecuteQuery(query, parameters))
+                {
+                    if (reader.Read())
+                    {
+                        txtPassbookType.Text = reader["MaKyHan"].ToString();
+                        txtRemainingTime.Text = reader["ThoiGianConLai"].ToString();
+                        txtBalance.Text = reader["SoDu"].ToString();
+                    }
+                    else
+                    {
+                        txtPassbookType.Text = string.Empty;
+                        txtRemainingTime.Text = string.Empty;
+                        txtBalance.Text = string.Empty;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
-            string transactionType = cbTransactionType.SelectedItem.ToString();
-            string passbookID = cbPassbookID.SelectedItem.ToString();
-            decimal amount;
-
-            if (!decimal.TryParse(txtAmount.Text, out amount))
+            try
             {
-                MessageBox.Show("Số tiền không hợp lệ. Vui lòng nhập lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                string transactionID = lblTransactionIDValue.Text;
+                string transactionDate = lblTransactionDateValue.Text;
+                string customerID = txtCustomerID.Text.Trim();
+                string passbookID = cbPassbookID.SelectedItem.ToString();
+                string transactionType = cbTransactionType.SelectedItem.ToString();
+                decimal amount = decimal.Parse(txtAmount.Text.Trim());
+                string employeeID = "NV123"; // Replace with actual employee ID from session or context
+
+                string query1 = "INSERT INTO GiaoDich (MaGD, NgayGiaoDich, MaKH, MaSo, MaNV, LoaiGiaoDich, SoTien) VALUES (@MaGD, @NgayGiaoDich, @MaKH, @MaSo, @MaNV, @LoaiGiaoDich, @SoTien)";
+                SQLiteParameter[] parameters1 =
+                {
+                    new SQLiteParameter("@MaGD", transactionID),
+                    new SQLiteParameter("@NgayGiaoDich", transactionDate),
+                    new SQLiteParameter("@MaKH", customerID),
+                    new SQLiteParameter("@MaSo", passbookID),
+                    new SQLiteParameter("@MaNV", employeeID),
+                    new SQLiteParameter("@LoaiGiaoDich", transactionType),
+                    new SQLiteParameter("@SoTien", amount)
+                };
+                DatabaseManager.Instance.ExecuteNonQuery(query1, parameters1);
+
+                string query2 = "UPDATE SoTietKiem SET SoDu = SoDu + @SoTien WHERE MaSo = @MaSo";
+                if (transactionType == "Rut")
+                {
+                    query2 = "UPDATE SoTietKiem SET SoDu = SoDu - @SoTien WHERE MaSo = @MaSo";
+                }
+                SQLiteParameter[] parameters2 =
+                {
+                    new SQLiteParameter("@SoTien", amount),
+                    new SQLiteParameter("@MaSo", passbookID)
+                };
+                DatabaseManager.Instance.ExecuteNonQuery(query2, parameters2);
+
+                MessageBox.Show("Giao dịch thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-            if (string.IsNullOrEmpty(passbookID))
+            catch (Exception ex)
             {
-                MessageBox.Show("Mã sổ tiết kiệm không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            bool success = PerformTransaction(transactionType, passbookID, amount);
-
-            if (success)
-            {
-                MessageBox.Show("Giao dịch thành công.", "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Giao dịch thất bại. Vui lòng thử lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
-            MainForm mainForm = new MainForm(username);
-            mainForm.Show();
+            MainForm main = new MainForm(username);
+            main.Show();
         }
 
-        private bool PerformTransaction(string transactionType, string passbookID, decimal amount)
+        private void TransactionForm_Load(object sender, EventArgs e)
         {
-            bool success = false;
-            string query = string.Empty;
 
-            try
-            {
-                if (transactionType == "Gửi Tiền")
-                {
-                    query = "UPDATE SoTietKiem SET SoDu = SoDu + @Amount WHERE MaSo = @PassbookID AND NgayDenHan = @Today";
-                }
-                else if (transactionType == "Rút Tiền")
-                {
-                    query = "UPDATE SoTietKiem SET SoDu = SoDu - @Amount WHERE MaSo = @PassbookID AND SoDu >= @Amount";
-                }
-                else
-                {
-                    return false;
-                }
-
-                SQLiteParameter[] parameters = {
-                    new SQLiteParameter("@Amount", amount),
-                    new SQLiteParameter("@PassbookID", passbookID),
-                    new SQLiteParameter("@Today", DateTime.Now.ToString("yyyy-MM-dd"))
-                };
-
-                databaseManager.ExecuteNonQuery(query, parameters);
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            return success;
-        }
-
-        private void txtCustomerID_Leave(object sender, EventArgs e)
-        {
-            string customerID = txtCustomerID.Text;
-
-            if (string.IsNullOrEmpty(customerID))
-            {
-                MessageBox.Show("Vui lòng nhập mã khách hàng.");
-                return;
-            }
-
-            string query = "SELECT TenKH, \"CMND/CCCD\" FROM KhachHang WHERE MaKH = @MaKH";
-            SQLiteDataReader reader = null;
-
-            try
-            {
-                SQLiteParameter[] parameters = { new SQLiteParameter("@MaKH", customerID) };
-                reader = databaseManager.ExecuteQuery(query, parameters);
-
-                if (reader.Read())
-                {
-                    txtCustomerName.Text = reader["TenKH"].ToString();
-                    txtIDCard.Text = reader["CMND/CCCD"].ToString();
-                    LoadPassbookIDs(customerID);
-                }
-                else
-                {
-                    MessageBox.Show("Mã khách hàng không hợp lệ.");
-                    txtCustomerName.Text = string.Empty;
-                    txtIDCard.Text = string.Empty;
-                    cbPassbookID.Items.Clear();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (reader != null)
-                {
-                    reader.Close();
-                }
-            }
-        }
-
-        private void LoadPassbookIDs(string customerID)
-        {
-            string query = "SELECT MaSo FROM SoTietKiem WHERE MaKH = @MaKH";
-            SQLiteDataReader reader = null;
-
-            try
-            {
-                SQLiteParameter[] parameters = { new SQLiteParameter("@MaKH", customerID) };
-                reader = databaseManager.ExecuteQuery(query, parameters);
-
-                cbPassbookID.Items.Clear();
-                while (reader.Read())
-                {
-                    cbPassbookID.Items.Add(reader["MaSo"].ToString());
-                }
-
-                if (cbPassbookID.Items.Count > 0)
-                {
-                    cbPassbookID.SelectedIndex = 0;
-                    LoadPassbookDetails(cbPassbookID.SelectedItem.ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (reader != null)
-                {
-                    reader.Close();
-                }
-            }
-        }
-
-        private void cbPassbookID_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            LoadPassbookDetails(cbPassbookID.SelectedItem.ToString());
-        }
-
-        private void LoadPassbookDetails(string passbookID)
-        {
-            string query = @"
-    SELECT 
-        stk.MaKyHan, 
-        stk.SoDu, 
-        (lk.ThoiGianGoiToiThieu - julianday(@Today) + julianday(stk.NgayLapSo)) AS ThoiGianConLai 
-    FROM 
-        SoTietKiem stk 
-    JOIN 
-        LoaiKyHan lk 
-    ON 
-        stk.MaKyHan = lk.MaKyHan 
-    WHERE 
-        stk.MaSo = @MaSo";
-            SQLiteDataReader reader = null;
-
-            try
-            {
-                SQLiteParameter[] parameters = {
-                    new SQLiteParameter("@MaSo", passbookID),
-                    new SQLiteParameter("@Today", DateTime.Now.ToString("yyyy-MM-dd"))
-                };
-
-                reader = databaseManager.ExecuteQuery(query, parameters);
-
-                if (reader.Read())
-                {
-                    txtPassbookType.Text = reader["MaKyHan"].ToString();
-                    txtRemainingTime.Text = reader["ThoiGianConLai"].ToString() + " ngày";
-                    txtBalance.Text = reader["SoDu"].ToString() + " VND";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (reader != null)
-                {
-                    reader.Close();
-                }
-            }
-        }
-
-        private void cbTransactionType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Thêm bất kỳ logic nào cần thiết khi loại giao dịch thay đổi.
         }
     }
 }

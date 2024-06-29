@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
-using System.IO;
 using System.Windows.Forms;
 
 namespace BankManagement
 {
     public partial class TransactionHistoryForm : Form
     {
-        private string databaseFile = "DATA.db";
-        private string databasePath;
-        private string connectionString;
         private string username;
 
         public TransactionHistoryForm(string username)
         {
             InitializeComponent();
             this.username = username;
-
-            databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseFile);
-            connectionString = $"Data Source={databasePath};Version=3;";
         }
 
         private void btnBackToMain_Click(object sender, EventArgs e)
@@ -36,21 +29,19 @@ namespace BankManagement
 
         private void LoadTransactionData()
         {
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                try
+                string query = "SELECT MaGD, LoaiGiaoDich, MaKH, MaSo, MaNV, NgayGiaoDich, SoTien FROM GiaoDich";
+                using (SQLiteDataReader reader = DatabaseManager.Instance.ExecuteQuery(query))
                 {
-                    conn.Open();
-                    string query = "SELECT MaGD, LoaiGiaoDich, MaKH, MaSo, MaNV, NgayGiaoDich, SoTien FROM GiaoDich";
-                    SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
                     DataTable dt = new DataTable();
-                    da.Fill(dt);
+                    dt.Load(reader);
                     dataGridView1.DataSource = dt;
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -65,34 +56,32 @@ namespace BankManagement
 
         private void LoadTransactionDetails(string transactionID)
         {
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                try
+                string query = $@"SELECT 
+                                    G.MaGD, G.LoaiGiaoDich, G.NgayGiaoDich, G.SoTien,
+                                    KH.MaKH, KH.TenKH, KH.[CMND/CCCD], KH.SDT, KH.GioiTinh, KH.DiaChi,
+                                    NV.MaNV, NV.TenNV, NV.ChucVu,
+                                    STK.MaSo, STK.SoDu, STK.NgayLapSo,
+                                    LK.MaKyHan, LK.TenKyHan, LK.LaiSuat, LK.ThoiGianGoiToiThieu
+                                FROM GiaoDich G
+                                JOIN KhachHang KH ON G.MaKH = KH.MaKH
+                                JOIN NhanVien NV ON G.MaNV = NV.MaNV
+                                JOIN SoTietKiem STK ON G.MaSo = STK.MaSo
+                                JOIN LoaiKyHan LK ON STK.MaKyHan = LK.MaKyHan
+                                WHERE G.MaGD = @TransactionID";
+                SQLiteParameter[] parameters = { new SQLiteParameter("@TransactionID", transactionID) };
+                using (SQLiteDataReader reader = DatabaseManager.Instance.ExecuteQuery(query, parameters))
                 {
-                    conn.Open();
-                    string query = $@"SELECT 
-                                        G.MaGD, G.LoaiGiaoDich, G.NgayGiaoDich, G.SoTien,
-                                        KH.MaKH, KH.TenKH, KH.[CMND/CCCD], KH.SDT, KH.GioiTinh, KH.DiaChi,
-                                        NV.MaNV, NV.TenNV, NV.ChucVu,
-                                        STK.MaSo, STK.SoDu, STK.NgayLapSo,
-                                        LK.MaKyHan, LK.TenKyHan, LK.LaiSuat, LK.ThoiGianGoiToiThieu
-                                    FROM GiaoDich G
-                                    JOIN KhachHang KH ON G.MaKH = KH.MaKH
-                                    JOIN NhanVien NV ON G.MaNV = NV.MaNV
-                                    JOIN SoTietKiem STK ON G.MaSo = STK.MaSo
-                                    JOIN LoaiKyHan LK ON STK.MaKyHan = LK.MaKyHan
-                                    WHERE G.MaGD = @TransactionID";
-                    SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn);
-                    da.SelectCommand.Parameters.AddWithValue("@TransactionID", transactionID);
                     DataTable dt = new DataTable();
-                    da.Fill(dt);
+                    dt.Load(reader);
                     detailsDataGridView.DataSource = dt;
                     detailsPanel.Visible = true;
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -107,27 +96,23 @@ namespace BankManagement
                 return;
             }
 
-            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            try
             {
-                try
+                string query = $@"SELECT 
+                                    MaGD, LoaiGiaoDich, MaKH, MaSo, MaNV, NgayGiaoDich, SoTien
+                                FROM GiaoDich
+                                WHERE {searchField} LIKE @SearchValue";
+                SQLiteParameter[] parameters = { new SQLiteParameter("@SearchValue", "%" + searchValue + "%") };
+                using (SQLiteDataReader reader = DatabaseManager.Instance.ExecuteQuery(query, parameters))
                 {
-                    conn.Open();
-                    string query = $@"SELECT 
-                                        MaGD, LoaiGiaoDich, MaKH, MaSo, MaNV, NgayGiaoDich, SoTien
-                                    FROM GiaoDich
-                                    WHERE {searchField} LIKE @SearchValue";
-                    using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn))
-                    {
-                        da.SelectCommand.Parameters.AddWithValue("@SearchValue", "%" + searchValue + "%");
-                        DataTable dt = new DataTable();
-                        da.Fill(dt);
-                        dataGridView1.DataSource = dt;
-                    }
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    dataGridView1.DataSource = dt;
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

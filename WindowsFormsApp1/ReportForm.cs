@@ -23,6 +23,8 @@ namespace BankManagement
             cbPeriodTypeSavings.SelectedIndex = 0;
             txtPeriodSales.Text = "dd/MM/yyyy";
             txtPeriodSavings.Text = "dd/MM/yyyy";
+            lblSalesReport.Text = "Báo cáo Doanh Số Hoạt Động Ngày";
+            lblSavingsReport.Text = "Báo cáo Mở/Đóng Sổ Tháng";
         }
 
         private void cbPeriodTypeSales_SelectedIndexChanged(object sender, EventArgs e)
@@ -129,14 +131,16 @@ namespace BankManagement
 
         private void LoadSalesReport(string periodType, string periodValue)
         {
-            string query = "SELECT LoaiKyHan.TenKyHan AS TenKyHan, " +
-                           "COUNT(CASE WHEN SoTietKiem.TrangThai = 'Mo' THEN 1 ELSE NULL END) AS SoSoMo, " +
-                           "COUNT(CASE WHEN SoTietKiem.TrangThai = 'Dong' THEN 1 ELSE NULL END) AS SoSoDong, " +
-                           "(COUNT(CASE WHEN SoTietKiem.TrangThai = 'Mo' THEN 1 ELSE NULL END) - COUNT(CASE WHEN SoTietKiem.TrangThai = 'Dong' THEN 1 ELSE NULL END)) AS ChenhLech " +
-                           "FROM SoTietKiem " +
+            string query = "SELECT LoaiKyHan.TenKyHan AS LoaiKyHan, " +
+                           "SUM(CASE WHEN GiaoDich.LoaiGiaoDich = 'Thu' THEN GiaoDich.SoTien ELSE 0 END) AS TongThu, " +
+                           "SUM(CASE WHEN GiaoDich.LoaiGiaoDich = 'Chi' THEN GiaoDich.SoTien ELSE 0 END) AS TongChi, " +
+                           "(SUM(CASE WHEN GiaoDich.LoaiGiaoDich = 'Thu' THEN GiaoDich.SoTien ELSE 0 END) - " +
+                           "SUM(CASE WHEN GiaoDich.LoaiGiaoDich = 'Chi' THEN GiaoDich.SoTien ELSE 0 END)) AS ChenhLech " +
+                           "FROM GiaoDich " +
+                           "JOIN SoTietKiem ON GiaoDich.MaSo = SoTietKiem.MaSo " +
                            "JOIN LoaiKyHan ON SoTietKiem.MaKyHan = LoaiKyHan.MaKyHan";
 
-            string whereClause = GetWhereClause(periodType, periodValue);
+            string whereClause = GetWhereClause(periodType, periodValue, "GiaoDich.NgayGiaoDich");
             if (!string.IsNullOrEmpty(whereClause))
             {
                 query += " WHERE " + whereClause;
@@ -169,23 +173,22 @@ namespace BankManagement
         {
             string query = "SELECT " +
                            "CASE " +
-                           "WHEN @periodType = 'Ngày' THEN strftime('%Y-%m-%d', NgayGiaoDich) " +
-                           "WHEN @periodType = 'Tháng' THEN strftime('%Y-%m', NgayGiaoDich) " +
-                           "WHEN @periodType = 'Quý' THEN 'Q' || ((strftime('%m', NgayGiaoDich)-1) / 3 + 1) || '-' || strftime('%Y', NgayGiaoDich) " +
-                           "ELSE strftime('%Y', NgayGiaoDich) END AS NgayThangQuyNam, " +
-                           "SUM(CASE WHEN GiaoDich.LoaiGiaoDich = 'Goi' THEN 1 ELSE 0 END) AS SoSoMo, " +
-                           "SUM(CASE WHEN GiaoDich.LoaiGiaoDich = 'Rut' THEN 1 ELSE 0 END) AS SoSoDong, " +
-                           "(SUM(CASE WHEN GiaoDich.LoaiGiaoDich = 'Goi' THEN 1 ELSE 0 END) - SUM(CASE WHEN GiaoDich.LoaiGiaoDich = 'Rut' THEN 1 ELSE 0 END)) AS ChenhLech " +
-                           "FROM GiaoDich " +
-                           "JOIN SoTietKiem ON GiaoDich.MaSo = SoTietKiem.MaSo ";
+                           "WHEN @periodType = 'Ngày' THEN strftime('%Y-%m-%d', SoTietKiem.NgayLapSo) " +
+                           "WHEN @periodType = 'Tháng' THEN strftime('%Y-%m', SoTietKiem.NgayLapSo) " +
+                           "WHEN @periodType = 'Quý' THEN 'Q' || ((strftime('%m', SoTietKiem.NgayLapSo)-1) / 3 + 1) || '-' || strftime('%Y', SoTietKiem.NgayLapSo) " +
+                           "ELSE strftime('%Y', SoTietKiem.NgayLapSo) END AS Ngay, " +
+                           "COUNT(CASE WHEN SoTietKiem.TinhTrang = 1 THEN 1 ELSE NULL END) AS SoSoMo, " +
+                           "COUNT(CASE WHEN SoTietKiem.TinhTrang = 0 THEN 1 ELSE NULL END) AS SoSoDong, " +
+                           "(COUNT(CASE WHEN SoTietKiem.TinhTrang = 1 THEN 1 ELSE NULL END) - COUNT(CASE WHEN SoTietKiem.TinhTrang = 0 THEN 1 ELSE NULL END)) AS ChenhLech " +
+                           "FROM SoTietKiem";
 
-            string whereClause = GetWhereClause(periodType, periodValue);
+            string whereClause = GetWhereClause(periodType, periodValue, "SoTietKiem.NgayLapSo");
             if (!string.IsNullOrEmpty(whereClause))
             {
                 query += " WHERE " + whereClause;
             }
 
-            query += " GROUP BY NgayThangQuyNam";
+            query += " GROUP BY Ngay";
 
             try
             {
@@ -209,7 +212,7 @@ namespace BankManagement
             }
         }
 
-        private string GetWhereClause(string periodType, string periodValue)
+        private string GetWhereClause(string periodType, string periodValue, string dateColumn)
         {
             if (string.IsNullOrWhiteSpace(periodValue))
                 return "";
@@ -217,54 +220,26 @@ namespace BankManagement
             switch (periodType)
             {
                 case "Ngày":
-                    return $"NgayGiaoDich = '{periodValue}'";
+                    return $"{dateColumn} = '{periodValue}'";
                 case "Tháng":
                     if (periodValue.Length == 7) // "YYYY-MM"
                     {
-                        return $"strftime('%m', NgayGiaoDich) = '{periodValue.Substring(5, 2)}' AND strftime('%Y', NgayGiaoDich) = '{periodValue.Substring(0, 4)}'";
+                        return $"strftime('%m', {dateColumn}) = '{periodValue.Substring(5, 2)}' AND strftime('%Y', {dateColumn}) = '{periodValue.Substring(0, 4)}'";
                     }
                     break;
                 case "Quý":
-                    string[] months = GetQuarterMonths(periodValue);
-                    if (months.Length > 0)
+                    string[] quarterParts = periodValue.Split('-');
+                    if (quarterParts.Length == 2)
                     {
-                        return $"strftime('%m', NgayGiaoDich) IN ({string.Join(",", months)})";
+                        int quarter = int.Parse(quarterParts[0].Substring(1));
+                        string year = quarterParts[1];
+                        return $"strftime('%Y', {dateColumn}) = '{year}' AND ((strftime('%m', {dateColumn})-1) / 3 + 1) = {quarter}";
                     }
                     break;
                 case "Năm":
-                    if (periodValue.Length == 4) // "YYYY"
-                    {
-                        return $"strftime('%Y', NgayGiaoDich) = '{periodValue}'";
-                    }
-                    break;
-                default:
-                    return "";
+                    return $"strftime('%Y', {dateColumn}) = '{periodValue}'";
             }
             return "";
-        }
-
-        private string[] GetQuarterMonths(string quarter)
-        {
-            switch (quarter)
-            {
-                case "Q1":
-                    return new string[] { "'01'", "'02'", "'03'" };
-                case "Q2":
-                    return new string[] { "'04'", "'05'", "'06'" };
-                case "Q3":
-                    return new string[] { "'07'", "'08'", "'09'" };
-                case "Q4":
-                    return new string[] { "'10'", "'11'", "'12'" };
-                default:
-                    return new string[0];
-            }
-        }
-
-        private void btnBack_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            MainForm mainForm = new MainForm(username);
-            mainForm.Show();
         }
     }
 }
