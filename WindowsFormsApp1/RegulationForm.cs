@@ -47,23 +47,67 @@ namespace BankManagement
             }
 
             dgvRegulations.DataSource = dt;
+            dgvRegulations.Columns["Mã Kỳ Hạn"].ReadOnly = true;
+        }
+
+        private void dgvRegulations_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dgvRegulations.Rows[e.RowIndex];
+                txtTerm.Text = row.Cells["Tên Kỳ Hạn"].Value.ToString();
+                txtInterestRate.Text = row.Cells["Lãi Suất"].Value.ToString();
+                txtMinTerm.Text = row.Cells["Thời Gian Gửi Tối Thiểu"].Value.ToString();
+                txtTermID.Text = row.Cells["Mã Kỳ Hạn"].Value.ToString();
+                SetFieldsReadOnly(true);
+            }
+        }
+
+        private void LoadGlobalSettings()
+        {
+            try
+            {
+                DatabaseManager.Instance.OpenConnection();
+                string query = "SELECT * FROM GlobalSetting";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
+                {
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            txtMinDeposit.Text = reader["MinDeposit"].ToString();
+                            txtInitialDeposit.Text = reader["InitialDeposit"].ToString();
+                            txtMinWithdraw.Text = reader["MinWithdraw"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi xảy ra khi tải dữ liệu: " + ex.Message);
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
+            }
+
+            SetGlobalSettingsReadOnly(true);
         }
 
         private string GetNextTermID()
         {
-            string nextID = "KH001";
+            string nextID = "1";
             try
             {
                 DatabaseManager.Instance.OpenConnection();
-                string query = "SELECT MaKyHan FROM LoaiKyHan ORDER BY MaKyHan DESC LIMIT 1";
+                string query = "SELECT COUNT(MaKyHan) FROM LoaiKyHan";
                 using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                 {
                     object result = cmd.ExecuteScalar();
                     if (result != null)
                     {
-                        string lastID = result.ToString();
-                        int idNumber = int.Parse(lastID.Substring(2)) + 1;
-                        nextID = "KH" + idNumber.ToString("D3");
+                        int count = Convert.ToInt32(result);
+                        nextID = (count + 1).ToString("D3");
                     }
                 }
             }
@@ -77,6 +121,7 @@ namespace BankManagement
             }
             return nextID;
         }
+
 
         private void btnBackToMain_Click(object sender, EventArgs e)
         {
@@ -97,7 +142,8 @@ namespace BankManagement
 
         private void RegulationForm_Load(object sender, EventArgs e)
         {
-
+            LoadCurrentRegulations();
+            LoadGlobalSettings();
         }
 
         private void SetFieldsReadOnly(bool readOnly)
@@ -106,6 +152,13 @@ namespace BankManagement
             txtInterestRate.ReadOnly = readOnly;
             txtMinTerm.ReadOnly = readOnly;
             txtTermID.ReadOnly = readOnly;
+        }
+
+        private void SetGlobalSettingsReadOnly(bool readOnly)
+        {
+            txtMinDeposit.ReadOnly = readOnly;
+            txtInitialDeposit.ReadOnly = readOnly;
+            txtMinWithdraw.ReadOnly = readOnly;
         }
 
         private void ClearFields()
@@ -120,21 +173,6 @@ namespace BankManagement
         {
             InitializeComponent();
             this.username = username;
-            LoadCurrentRegulations();
-            SetFieldsReadOnly(true);
-        }
-
-        private void dgvRegulations_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                DataGridViewRow row = dgvRegulations.Rows[e.RowIndex];
-                txtTerm.Text = row.Cells["Tên Kỳ Hạn"].Value.ToString();
-                txtInterestRate.Text = row.Cells["Lãi Suất"].Value.ToString();
-                txtMinTerm.Text = row.Cells["Thời Gian Gửi Tối Thiểu"].Value.ToString();
-                txtTermID.Text = row.Cells["Mã Kỳ Hạn"].Value.ToString();
-                SetFieldsReadOnly(true);
-            }
         }
 
         private void btnAddTerm_Click(object sender, EventArgs e)
@@ -184,26 +222,104 @@ namespace BankManagement
             SetFieldsReadOnly(true);
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnSaveTerm_Click(object sender, EventArgs e)
         {
-            string minDeposit = txtMinDeposit.Text;
-            string initialDeposit = txtInitialDeposit.Text;
+            string termID = txtTermID.Text;
+            string term = txtTerm.Text;
+            string interestRate = txtInterestRate.Text;
+            string minTerm = txtMinTerm.Text;
 
-            if (string.IsNullOrEmpty(minDeposit) || string.IsNullOrEmpty(initialDeposit))
+            if (string.IsNullOrEmpty(termID) || string.IsNullOrEmpty(term) || string.IsNullOrEmpty(interestRate) || string.IsNullOrEmpty(minTerm))
             {
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin.");
                 return;
             }
 
-            GlobalSettings.MinDeposit = decimal.Parse(minDeposit);
-            GlobalSettings.InitialDeposit = decimal.Parse(initialDeposit);
+            try
+            {
+                DatabaseManager.Instance.OpenConnection();
+                string query;
+                if (string.IsNullOrEmpty(txtTermID.Text))
+                {
+                    // Add new term
+                    query = "INSERT INTO LoaiKyHan (MaKyHan, TenKyHan, LaiSuat, ThoiGianGoiToiThieu) VALUES (@MaKyHan, @TenKyHan, @LaiSuat, @ThoiGianGoiToiThieu)";
+                }
+                else
+                {
+                    // Update existing term
+                    query = "UPDATE LoaiKyHan SET TenKyHan = @TenKyHan, LaiSuat = @LaiSuat, ThoiGianGoiToiThieu = @ThoiGianGoiToiThieu WHERE MaKyHan = @MaKyHan";
+                }
 
-            MessageBox.Show("Quy định mới đã được lưu.");
+                using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
+                {
+                    cmd.Parameters.AddWithValue("@MaKyHan", termID);
+                    cmd.Parameters.AddWithValue("@TenKyHan", term);
+                    cmd.Parameters.AddWithValue("@LaiSuat", interestRate);
+                    cmd.Parameters.AddWithValue("@ThoiGianGoiToiThieu", minTerm);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi xảy ra khi lưu dữ liệu: " + ex.Message);
+                return;
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
+            }
 
-            this.Close();
-            MainForm mainForm = new MainForm(username);
-            mainForm.Show();
+            LoadCurrentRegulations();
+            ClearFields();
             SetFieldsReadOnly(true);
+        }
+
+        private void btnEditGlobalSettings_Click(object sender, EventArgs e)
+        {
+            SetGlobalSettingsReadOnly(false);
+        }
+
+        private void btnSaveGlobalSettings_Click(object sender, EventArgs e)
+        {
+            string minDeposit = txtMinDeposit.Text;
+            string initialDeposit = txtInitialDeposit.Text;
+            string minWithdraw = txtMinWithdraw.Text;
+
+            if (string.IsNullOrEmpty(minDeposit) || string.IsNullOrEmpty(initialDeposit) || string.IsNullOrEmpty(minWithdraw))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin.");
+                return;
+            }
+
+            try
+            {
+                DatabaseManager.Instance.OpenConnection();
+                string query = "UPDATE GlobalSetting SET MinDeposit = @MinDeposit, InitialDeposit = @InitialDeposit, MinWithdraw = @MinWithdraw";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
+                {
+                    cmd.Parameters.AddWithValue("@MinDeposit", minDeposit);
+                    cmd.Parameters.AddWithValue("@InitialDeposit", initialDeposit);
+                    cmd.Parameters.AddWithValue("@MinWithdraw", minWithdraw);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi xảy ra khi lưu dữ liệu: " + ex.Message);
+                return;
+            }
+            finally
+            {
+                DatabaseManager.Instance.CloseConnection();
+            }
+
+            LoadGlobalSettings();
+            SetGlobalSettingsReadOnly(true);
+        }
+
+        private void dgvRegulations_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

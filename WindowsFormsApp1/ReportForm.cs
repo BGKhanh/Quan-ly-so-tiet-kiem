@@ -239,7 +239,23 @@ namespace BankManagement
                 case "Năm":
                     return $"strftime('%Y', {dateColumn}) = '{periodValue}'";
             }
+
             return "";
+        }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void dgvSavingsReport_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void lblSavingsReport_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -46,8 +46,8 @@ namespace BankManagement
             this.txtPassword.TabIndex = 1;
             this.txtPassword.Text = "Mật khẩu";
             this.txtPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtPassword.Click += new System.EventHandler(this.txtPassword_Click);
             this.txtPassword.UseSystemPasswordChar = true;
+            this.txtPassword.Click += new System.EventHandler(this.txtPassword_Click);
             // 
             // btnLogin
             // 
@@ -108,7 +108,7 @@ namespace BankManagement
             this.chkShowPassword.AutoSize = true;
             this.chkShowPassword.Location = new System.Drawing.Point(74, 130);
             this.chkShowPassword.Name = "chkShowPassword";
-            this.chkShowPassword.Size = new System.Drawing.Size(128, 20);
+            this.chkShowPassword.Size = new System.Drawing.Size(130, 20);
             this.chkShowPassword.TabIndex = 7;
             this.chkShowPassword.Text = "Hiển thị mật khẩu";
             this.chkShowPassword.UseVisualStyleBackColor = true;
