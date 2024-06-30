@@ -16,7 +16,7 @@ namespace BankManagement
         {
             // Lấy mã khách hàng mới nhất từ cơ sở dữ liệu
             string newCustomerCode = GetNewCustomerCode();
-            lblCustomerCode.Text = "KH" + newCustomerCode;
+            lblCustomerCode.Text =  newCustomerCode;
         }
 
         private string GetNewCustomerCode()
@@ -25,7 +25,7 @@ namespace BankManagement
             try
             {
                 DatabaseManager.Instance.OpenConnection();
-                string query = "SELECT MAX(CAST(SUBSTR(MaKH, 3) AS INTEGER)) + 1 FROM KhachHang";
+                string query = "SELECT IFNULL(MAX(CAST(MaKH AS INTEGER)), 0) + 1 FROM KhachHang";
                 using (var cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                 {
                     var result = cmd.ExecuteScalar();

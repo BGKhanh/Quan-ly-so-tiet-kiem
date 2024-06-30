@@ -147,5 +147,10 @@ namespace BankManagement
         {
             cmbSearchField.SelectedIndex = 0; // Default selection for ComboBox
         }
+
+        private void dgvSavingAccounts_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

@@ -246,6 +246,8 @@ namespace BankManagement
         private void btnBack_Click(object sender, EventArgs e)
         {
             this.Close();
+            MainForm main = new MainForm(username);
+            main.Show();
         }
 
         private void dgvSavingsReport_CellContentClick(object sender, DataGridViewCellEventArgs e)

@@ -109,6 +109,7 @@ namespace BankManagement
             this.dgvSavingAccounts.RowHeadersWidth = 51;
             this.dgvSavingAccounts.Size = new System.Drawing.Size(870, 383);
             this.dgvSavingAccounts.TabIndex = 5;
+            this.dgvSavingAccounts.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSavingAccounts_CellContentClick);
             // 
             // PassbookManagementForm
             // 

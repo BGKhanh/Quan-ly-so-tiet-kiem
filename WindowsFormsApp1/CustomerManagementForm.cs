@@ -130,6 +130,34 @@ namespace BankManagement
             if (detailsDataGridView.Rows.Count > 0)
             {
                 string customerID = detailsDataGridView.Rows[0].Cells["Value"].Value.ToString();
+
+                // Check for open savings accounts before deleting
+                bool hasOpenAccounts = false;
+                try
+                {
+                    DatabaseManager.Instance.OpenConnection();
+                    string checkQuery = "SELECT COUNT(*) FROM SoTietKiem WHERE MaKH = @MaKH AND TinhTrang = 1";
+                    using (SQLiteCommand checkCmd = new SQLiteCommand(checkQuery, DatabaseManager.Instance.GetConnection()))
+                    {
+                        checkCmd.Parameters.AddWithValue("@MaKH", customerID);
+                        int count = Convert.ToInt32(checkCmd.ExecuteScalar());
+                        if (count > 0)
+                        {
+                            hasOpenAccounts = true;
+                        }
+                    }
+                }
+                finally
+                {
+                    DatabaseManager.Instance.CloseConnection();
+                }
+
+                if (hasOpenAccounts)
+                {
+                    MessageBox.Show("Không thể xóa khách hàng vì có sổ tiết kiệm còn mở.");
+                    return;
+                }
+
                 DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa khách hàng này không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
@@ -140,7 +168,7 @@ namespace BankManagement
                         try
                         {
                             DatabaseManager.Instance.OpenConnection();
-                            string query = "DELETE FROM khachhang WHERE MaKH = @MaKH";
+                            string query = "DELETE FROM KhachHang WHERE MaKH = @MaKH";
                             using (SQLiteCommand cmd = new SQLiteCommand(query, DatabaseManager.Instance.GetConnection()))
                             {
                                 cmd.Parameters.AddWithValue("@MaKH", customerID);

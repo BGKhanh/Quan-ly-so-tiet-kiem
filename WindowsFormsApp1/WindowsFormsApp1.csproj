@@ -161,8 +161,8 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ManagerRegisterForm.resx">
-      <DependentUpon>ManagerRegisterForm.cs</DependentUpon>
+    <EmbeddedResource Include="ManagerManagementForm.resx">
+      <DependentUpon>ManagerManagementForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OpenNewPassbookForm.resx">
       <DependentUpon>OpenNewPassbookForm.cs</DependentUpon>
@@ -202,11 +202,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ManagerRegisterForm.cs">
+    <Compile Include="ManagerManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ManagerRegisterForm.Designer.cs">
-      <DependentUpon>ManagerRegisterForm.cs</DependentUpon>
+    <Compile Include="ManagerManagementForm.Designer.cs">
+      <DependentUpon>ManagerManagementForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
@@ -220,10 +220,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DATA.db" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Icon\" />
-    <Folder Include="Resource\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

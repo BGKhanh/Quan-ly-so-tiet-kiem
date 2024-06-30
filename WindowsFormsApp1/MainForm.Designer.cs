@@ -105,7 +105,7 @@
             this.btnRegisterEmployee.Name = "btnRegisterEmployee";
             this.btnRegisterEmployee.Size = new System.Drawing.Size(187, 37);
             this.btnRegisterEmployee.TabIndex = 6;
-            this.btnRegisterEmployee.Text = "Đăng ký nhân viên";
+            this.btnRegisterEmployee.Text = "Quản lý nhân viên";
             this.btnRegisterEmployee.UseVisualStyleBackColor = true;
             this.btnRegisterEmployee.Click += new System.EventHandler(this.btnRegisterEmployee_Click);
             // 
